@@ -193,7 +193,7 @@ export default function App() {
             <Bolt className="text-[#00f2ff] fill-[#00f2ff]/50 w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-sm font-light tracking-tighter text-white uppercase leading-none">Nexus<span className="font-black text-[#00f2ff]">OS</span></h1>
+            <h1 className="text-sm font-light tracking-tighter text-white uppercase leading-none">STG<span className="font-black text-[#00f2ff]">OS</span></h1>
           </div>
         </div>
 
