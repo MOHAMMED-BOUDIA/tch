@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch server.ts",
+    "dev": "nodemon",
     "start": "node server.ts"
   },
   "dependencies": {

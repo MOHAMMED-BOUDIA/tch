@@ -1,29 +1,12 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
 async function startServer() {
   const app = express();
   app.use(express.json());
-
-  // Initialize Gemini client safely
-  let ai: GoogleGenAI | null = null;
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (apiKey) {
-    ai = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          "User-Agent": "aistudio-build",
-        },
-      },
-    });
-  } else {
-    console.warn("GEMINI_API_KEY is not set. Gemini API endpoint will return mock responses.");
-  }
 
   // API Chat Endpoint
   app.post("/api/chat", async (req, res) => {
@@ -34,46 +17,16 @@ async function startServer() {
         return;
       }
 
-      const systemInstruction = `
-You are "Nexus Assistant", an elite AI-Core V4.2.0 agent designed for Nexus Pro Enterprise Workspace.
-Your characteristics:
-- High-performance project management bot.
-- Crisp, professional, brief, and technical.
-- You specialize in systems architecture, real-time analytics, and devops deployments.
-- In the conversation, you represent a highly competent, responsive agent.
-- Keep responses concise and highly actionable, using rich formatting where helpful (markdown, list items, statistics).
-- Mirror the vibe of the premium dark-themed Nexus dashboard.
-`;
-
-      if (ai) {
-        // Prepare contents from history
-        const contents = messages.map((m: any) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
-        }));
-
-        const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
-          contents,
-          config: {
-            systemInstruction,
-          },
-        });
-
-        res.json({ content: response.text || "I was unable to formulate a response." });
-      } else {
-        // Fallback mock responses to prevent crash
-        const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || "";
-        let mockReply = "I am processing the data from the recent deployments. Performance metrics are looking highly optimized.";
-        if (lastMessage.includes("report") || lastMessage.includes("latency")) {
-          mockReply = "Here is the summary of latency improvements:\n- **EU-West**: -34ms (24% reduction)\n- **US-East**: -18ms\n- **Tokyo**: Under investigation (slight outlier detected in database pooling).\n\nWould you like me to run an automated query optimization?";
-        } else if (lastMessage.includes("hello") || lastMessage.includes("hi")) {
-          mockReply = "Welcome back, Alex. I've finished processing the analytics for the **Nexus Core** deployment. Performance is up by 24% and latency has decreased significantly in EU-West. Would you like to see the full report?";
-        }
-        res.json({ content: mockReply });
+      const lastMessage = messages[messages.length - 1]?.content?.toLowerCase() || "";
+      let mockReply = "I am processing the data from the recent deployments. Performance metrics are looking highly optimized.";
+      if (lastMessage.includes("report") || lastMessage.includes("latency")) {
+        mockReply = "Here is the summary of latency improvements:\n- **EU-West**: -34ms (24% reduction)\n- **US-East**: -18ms\n- **Tokyo**: Under investigation (slight outlier detected in database pooling).\n\nWould you like me to run an automated query optimization?";
+      } else if (lastMessage.includes("hello") || lastMessage.includes("hi")) {
+        mockReply = "Welcome back, Alex. I've finished processing the analytics for the **Nexus Core** deployment. Performance is up by 24% and latency has decreased significantly in EU-West. Would you like to see the full report?";
       }
+      res.json({ content: mockReply });
     } catch (error: any) {
-      console.error("Gemini API Error:", error);
+      console.error("Server Error:", error);
       res.status(500).json({ error: error.message || "Internal server error" });
     }
   });
@@ -81,7 +34,7 @@ Your characteristics:
   // Serve static client build in production
   const distPath = path.join(process.cwd(), "dist");
   app.use(express.static(distPath));
-  app.get("*", (req, res) => {
+  app.get("/{*path}", (req, res) => {
     res.sendFile(path.join(distPath, "index.html"));
   });
 
