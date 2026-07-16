@@ -1,29 +1,3 @@
-export interface Message {
-  id: string;
-  sender: string;
-  content: string;
-  timestamp: string;
-  avatar: string;
-  role: "user" | "assistant";
-}
-
-export interface User {
-  id: string;
-  name: string;
-  role: string;
-  avatar: string;
-  status: "online" | "away" | "offline";
-}
-
-export interface ChatSession {
-  id: string;
-  name: string;
-  avatar: string;
-  lastMessage: string;
-  time: string;
-  active?: boolean;
-}
-
 export interface GraphNode {
   id: number;
   name: string;

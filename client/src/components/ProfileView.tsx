@@ -64,7 +64,7 @@ export default function ProfileView() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto custom-scrollbar h-full bg-[#050505] pb-12" id="nexus-profile-view">
+    <div className="flex-1 overflow-y-auto custom-scrollbar h-full bg-[#FEF3C8] pb-12" id="nexus-profile-view">
       <div className="relative">
         {/* Banner Cover Image (Fluid height on desktop / mobile) */}
         <div className="h-56 md:h-72 w-full overflow-hidden relative group">
@@ -73,13 +73,13 @@ export default function ProfileView() {
             alt="Futuristic neon city panorama" 
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FEF3C8] via-[#FEF3C8]/80 to-transparent" />
         </div>
 
         {/* Profile Identity Card Overlay */}
         <div className="max-w-[1300px] mx-auto px-6 md:px-12 -mt-16 md:-mt-24 relative z-10">
-          <div className="flex flex-col md:flex-row items-end gap-6 pb-6 border-b border-[#222]">
-            <div className="w-28 h-28 md:w-36 md:h-36 rounded-2xl border-4 border-[#050505] bg-[#161616] overflow-hidden shadow-2xl shrink-0">
+          <div className="flex flex-col md:flex-row items-end gap-6 pb-6 border-b border-[#e8e4df]">
+            <div className="w-28 h-28 md:w-36 md:h-36 rounded-2xl border-4 border-[#FEF3C8] bg-[#f8f6f3] overflow-hidden shadow-2xl shrink-0">
               <NexusImage 
                 src={PROFILE_AVATAR} 
                 alt="Alex Rivera headshot" 
@@ -88,10 +88,10 @@ export default function ProfileView() {
             </div>
             
             <div className="flex-1 text-center md:text-left pb-1">
-              <h1 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-tight">{profile.name}</h1>
-              <p className="text-xs md:text-sm text-[#00f2ff] font-semibold mt-1 leading-normal">{profile.title}</p>
-              <div className="flex items-center justify-center md:justify-start gap-1 text-slate-400 text-[11px] mt-1.5 font-medium">
-                <MapPin className="w-3.5 h-3.5 text-[#00f2ff] opacity-80" />
+              <h1 className="text-xl md:text-3xl font-bold text-[#1a1a1a] tracking-tight leading-tight">{profile.name}</h1>
+              <p className="text-xs md:text-sm text-[#c9953a] font-semibold mt-1 leading-normal">{profile.title}</p>
+              <div className="flex items-center justify-center md:justify-start gap-1 text-[#6a6a6a] text-[11px] mt-1.5 font-medium">
+                <MapPin className="w-3.5 h-3.5 text-[#c9953a] opacity-80" />
                 <span>{profile.location}</span>
               </div>
             </div>
@@ -99,12 +99,12 @@ export default function ProfileView() {
             <div className="flex gap-2 shrink-0 pb-1">
               <button 
                 onClick={handleEditOpen}
-                className="bg-[#00f2ff] hover:bg-[#00f2ff]/90 text-black px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#00f2ff]/15 active:scale-95 transition-all cursor-pointer"
+                className="bg-[#c9953a] hover:bg-[#c9953a]/90 text-[#1a1a1a] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#c9953a]/15 active:scale-95 transition-all cursor-pointer"
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 Edit Profile
               </button>
-              <button className="bg-[#161616] hover:bg-[#222] border border-[#222] text-[#e0e0e0] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer">
+              <button className="bg-[#f8f6f3] hover:bg-[#222] border border-[#e8e4df] text-[#e0e0e0] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer">
                 <Mail className="w-3.5 h-3.5" />
                 Message
               </button>
@@ -119,19 +119,19 @@ export default function ProfileView() {
         {/* Left Column (Width: 4/12) */}
         <div className="lg:col-span-4 space-y-6">
           {/* About/Bio Card */}
-          <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff] mb-3">About</h3>
-            <p className="text-xs text-slate-300 leading-relaxed font-normal">{profile.bio}</p>
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a] mb-3">About</h3>
+            <p className="text-xs text-[#4a4a4a] leading-relaxed font-normal">{profile.bio}</p>
           </div>
 
           {/* Expertise Chips */}
-          <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff] mb-3">Expertise</h3>
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a] mb-3">Expertise</h3>
             <div className="flex flex-wrap gap-2">
-              <span className="bg-[#00f2ff]/10 text-[#00f2ff] border border-[#00f2ff]/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wide">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00f2ff] animate-pulse" /> System Architecture
+              <span className="bg-[#c9953a]/10 text-[#c9953a] border border-[#c9953a]/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wide">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#c9953a] animate-pulse" /> System Architecture
               </span>
-              <span className="bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wide">
+              <span className="bg-green-500/10 text-green-600 border border-green-500/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wide">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" /> Three.js / WebGL
               </span>
               <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wide">
@@ -147,42 +147,42 @@ export default function ProfileView() {
           </div>
 
           {/* Metrics Panel */}
-          <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff] mb-4">Nexus Metrics</h3>
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a] mb-4">Nexus Metrics</h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-[#161616] rounded-xl border border-[#222] text-center">
-                <p className="text-3xl font-bold text-[#00f2ff] tracking-tight leading-none">84</p>
-                <p className="text-[9px] text-slate-500 uppercase tracking-widest mt-2 font-bold">Projects</p>
+              <div className="p-4 bg-[#f8f6f3] rounded-xl border border-[#e8e4df] text-center">
+                <p className="text-3xl font-bold text-[#c9953a] tracking-tight leading-none">84</p>
+                <p className="text-[9px] text-[#8a8a8a] uppercase tracking-widest mt-2 font-bold">Projects</p>
               </div>
-              <div className="p-4 bg-[#161616] rounded-xl border border-[#222] text-center">
-                <p className="text-3xl font-bold text-green-400 tracking-tight leading-none">12k</p>
-                <p className="text-[9px] text-slate-500 uppercase tracking-widest mt-2 font-bold">Impact</p>
+              <div className="p-4 bg-[#f8f6f3] rounded-xl border border-[#e8e4df] text-center">
+                <p className="text-3xl font-bold text-green-600 tracking-tight leading-none">12k</p>
+                <p className="text-[9px] text-[#8a8a8a] uppercase tracking-widest mt-2 font-bold">Impact</p>
               </div>
             </div>
           </div>
 
           {/* Network Connections */}
-          <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff]">Network</h3>
-              <button className="text-[#00f2ff] text-[10px] font-bold uppercase tracking-wider hover:underline cursor-pointer">View All</button>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a]">Network</h3>
+              <button className="text-[#c9953a] text-[10px] font-bold uppercase tracking-wider hover:underline cursor-pointer">View All</button>
             </div>
             
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#161616] border border-[#222]">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#f8f6f3] border border-[#e8e4df]">
                   <NexusImage src={SARAH_CHEN_AVATAR} alt="Sarah Chen avatar" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white truncate">Sarah Chen</p>
-                  <p className="text-[10px] text-slate-400 truncate">Lead Frontend Designer</p>
+                  <p className="text-xs font-bold text-[#1a1a1a] truncate">Sarah Chen</p>
+                  <p className="text-[10px] text-[#6a6a6a] truncate">Lead Frontend Designer</p>
                 </div>
                 <button 
                   onClick={() => toggleFollow('sarah')}
                   className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all border cursor-pointer ${
                     followedState['sarah'] 
-                      ? 'bg-[#00f2ff]/10 border-[#00f2ff]/30 text-[#00f2ff]' 
-                      : 'bg-[#161616] hover:bg-[#222] border-[#222] text-slate-400 hover:text-white'
+                      ? 'bg-[#c9953a]/10 border-[#c9953a]/30 text-[#c9953a]' 
+                      : 'bg-[#f8f6f3] hover:bg-[#222] border-[#e8e4df] text-[#6a6a6a] hover:text-[#1a1a1a]'
                   }`}
                 >
                   {followedState['sarah'] ? <Check className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
@@ -190,19 +190,19 @@ export default function ProfileView() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#161616] border border-[#222]">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#f8f6f3] border border-[#e8e4df]">
                   <NexusImage src={MARCUS_AVATAR} alt="Marcus Thorne avatar" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white truncate">Marcus Thorne</p>
-                  <p className="text-[10px] text-slate-400 truncate">Cloud Infrastructure Lead</p>
+                  <p className="text-xs font-bold text-[#1a1a1a] truncate">Marcus Thorne</p>
+                  <p className="text-[10px] text-[#6a6a6a] truncate">Cloud Infrastructure Lead</p>
                 </div>
                 <button 
                   onClick={() => toggleFollow('marcus')}
                   className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all border cursor-pointer ${
                     followedState['marcus'] 
-                      ? 'bg-[#00f2ff]/10 border-[#00f2ff]/30 text-[#00f2ff]' 
-                      : 'bg-[#161616] hover:bg-[#222] border-[#222] text-slate-400 hover:text-white'
+                      ? 'bg-[#c9953a]/10 border-[#c9953a]/30 text-[#c9953a]' 
+                      : 'bg-[#f8f6f3] hover:bg-[#222] border-[#e8e4df] text-[#6a6a6a] hover:text-[#1a1a1a]'
                   }`}
                 >
                   {followedState['marcus'] ? <Check className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
@@ -216,25 +216,25 @@ export default function ProfileView() {
         <div className="lg:col-span-8 space-y-6">
           
           {/* Portfolio Highlights */}
-          <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff] mb-4">Portfolio Highlights</h3>
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a] mb-4">Portfolio Highlights</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="h-44 rounded-xl overflow-hidden group relative border border-[#222]">
+              <div className="h-44 rounded-xl overflow-hidden group relative border border-[#e8e4df]">
                 <NexusImage src={PORTFOLIO_1} alt="Glass UI visualization" className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
-                <div className="absolute inset-0 bg-[#00f2ff]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Eye className="text-white w-6 h-6 shadow-sm" />
+                <div className="absolute inset-0 bg-[#c9953a]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Eye className="text-[#1a1a1a] w-6 h-6 shadow-sm" />
                 </div>
               </div>
-              <div className="h-44 rounded-xl overflow-hidden group relative border border-[#222]">
+              <div className="h-44 rounded-xl overflow-hidden group relative border border-[#e8e4df]">
                 <NexusImage src={PORTFOLIO_2} alt="Decentralized cloud network" className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
-                <div className="absolute inset-0 bg-[#00f2ff]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Eye className="text-white w-6 h-6 shadow-sm" />
+                <div className="absolute inset-0 bg-[#c9953a]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Eye className="text-[#1a1a1a] w-6 h-6 shadow-sm" />
                 </div>
               </div>
-              <div className="h-44 rounded-xl overflow-hidden group relative border border-[#222]">
+              <div className="h-44 rounded-xl overflow-hidden group relative border border-[#e8e4df]">
                 <NexusImage src={PORTFOLIO_3} alt="Minimal datacenter architecture" className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
-                <div className="absolute inset-0 bg-[#00f2ff]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Eye className="text-white w-6 h-6 shadow-sm" />
+                <div className="absolute inset-0 bg-[#c9953a]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Eye className="text-[#1a1a1a] w-6 h-6 shadow-sm" />
                 </div>
               </div>
             </div>
@@ -243,27 +243,27 @@ export default function ProfileView() {
           {/* Project Cards (Bento) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {initialProjects.map((proj) => (
-              <div key={proj.id} className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md relative overflow-hidden group hover:border-[#00f2ff]/40 transition-all">
+              <div key={proj.id} className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md relative overflow-hidden group hover:border-[#c9953a]/40 transition-all">
                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
-                  <span className="text-[#00f2ff] text-6xl">⚙️</span>
+                  <span className="text-[#c9953a] text-6xl">⚙️</span>
                 </div>
                 <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-3.5 inline-block ${
-                  proj.status === "Active Now" ? "bg-green-500/10 border border-green-500/20 text-green-400" : "bg-[#161616] border border-[#222] text-slate-400"
+                  proj.status === "Active Now" ? "bg-green-500/10 border border-green-500/20 text-green-600" : "bg-[#f8f6f3] border border-[#e8e4df] text-[#6a6a6a]"
                 }`}>
                   {proj.status}
                 </span>
-                <h4 className="text-base font-bold text-white mb-1 leading-snug">{proj.name}</h4>
-                <p className="text-slate-400 text-xs mb-5 leading-relaxed">{proj.description}</p>
+                <h4 className="text-base font-bold text-[#1a1a1a] mb-1 leading-snug">{proj.name}</h4>
+                <p className="text-[#6a6a6a] text-xs mb-5 leading-relaxed">{proj.description}</p>
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-1.5">
-                    <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#161616]" />
-                    <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#161616]" />
-                    <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#161616]" />
+                    <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#f8f6f3]" />
+                    <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#f8f6f3]" />
+                    <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#f8f6f3]" />
                   </div>
                   {proj.performanceScore ? (
-                    <span className="text-[10px] text-[#00f2ff] font-bold">{proj.performanceScore}</span>
+                    <span className="text-[10px] text-[#c9953a] font-bold">{proj.performanceScore}</span>
                   ) : (
-                    <span className="text-[10px] text-slate-400 font-medium">+{proj.contributorsCount} Contributors</span>
+                    <span className="text-[10px] text-[#6a6a6a] font-medium">+{proj.contributorsCount} Contributors</span>
                   )}
                 </div>
               </div>
@@ -273,30 +273,30 @@ export default function ProfileView() {
           {/* Bento Grid: Notes & Recent Activities */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Notes List */}
-            <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md flex flex-col justify-between">
+            <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md flex flex-col justify-between">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff]">Recent Notes</h3>
-                <Plus className="w-4 h-4 text-slate-400 hover:text-white cursor-pointer" />
+                <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a]">Recent Notes</h3>
+                <Plus className="w-4 h-4 text-[#6a6a6a] hover:text-[#1a1a1a] cursor-pointer" />
               </div>
               <ul className="space-y-3">
                 {initialNotes.map((note) => (
-                  <li key={note.id} className="p-3 bg-[#161616] rounded-xl border border-[#222] hover:border-[#00f2ff]/30 hover:bg-[#161616]/80 transition-all cursor-pointer">
-                    <p className="text-xs font-bold text-white mb-1">{note.title}</p>
-                    <p className="text-[9px] text-slate-400">{note.updatedAt} • {note.status}</p>
+                  <li key={note.id} className="p-3 bg-[#f8f6f3] rounded-xl border border-[#e8e4df] hover:border-[#c9953a]/30 hover:bg-[#f8f6f3]/80 transition-all cursor-pointer">
+                    <p className="text-xs font-bold text-[#1a1a1a] mb-1">{note.title}</p>
+                    <p className="text-[9px] text-[#6a6a6a]">{note.updatedAt} • {note.status}</p>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Activity Feed */}
-            <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff]">Recent Activity</h3>
-              <div className="border-l-2 border-[#222] ml-1.5 pl-5 space-y-5 relative">
+            <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a]">Recent Activity</h3>
+              <div className="border-l-2 border-[#e8e4df] ml-1.5 pl-5 space-y-5 relative">
                 {initialActivities.map((act) => (
                   <div key={act.id} className="relative">
                     <div className={`absolute -left-[27px] top-1 w-2.5 h-2.5 rounded-full ${act.color} ring-4 ring-[#0f0f0f]`} />
-                    <p className="text-xs text-slate-200 font-medium leading-normal">{act.text}</p>
-                    <p className="text-[10px] text-slate-500 mt-1 font-medium">{act.time}</p>
+                    <p className="text-xs text-[#2d2d2d] font-medium leading-normal">{act.text}</p>
+                    <p className="text-[10px] text-[#8a8a8a] mt-1 font-medium">{act.time}</p>
                   </div>
                 ))}
               </div>
@@ -304,20 +304,20 @@ export default function ProfileView() {
           </div>
 
           {/* Calendar Sync System */}
-          <div className="bg-[#0f0f0f]/80 backdrop-blur-md p-6 rounded-2xl border border-[#222] shadow-md">
+          <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-[#e8e4df] shadow-md">
             <div className="flex justify-between items-center mb-5">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-[#00f2ff]">Upcoming Syncs</h3>
-              <div className="flex items-center gap-3 text-slate-400">
-                <ChevronLeft className="w-4 h-4 cursor-pointer hover:text-[#00f2ff]" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-[#c9953a]">Upcoming Syncs</h3>
+              <div className="flex items-center gap-3 text-[#6a6a6a]">
+                <ChevronLeft className="w-4 h-4 cursor-pointer hover:text-[#c9953a]" />
                 <span className="text-xs font-bold">October 2023</span>
-                <ChevronRight className="w-4 h-4 cursor-pointer hover:text-[#00f2ff]" />
+                <ChevronRight className="w-4 h-4 cursor-pointer hover:text-[#c9953a]" />
               </div>
             </div>
 
             {/* Days Header */}
             <div className="grid grid-cols-7 gap-1 text-center mb-2">
               {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
-                <span key={idx} className="text-[10px] text-slate-500 font-bold">{day}</span>
+                <span key={idx} className="text-[10px] text-[#8a8a8a] font-bold">{day}</span>
               ))}
             </div>
 
@@ -330,7 +330,7 @@ export default function ProfileView() {
               {Array.from({ length: 11 }, (_, i) => {
                 const day = i + 1;
                 return (
-                  <div key={`day-${day}`} className="p-2 text-slate-400 font-medium">
+                  <div key={`day-${day}`} className="p-2 text-[#6a6a6a] font-medium">
                     {day}
                   </div>
                 );
@@ -340,17 +340,17 @@ export default function ProfileView() {
               <div 
                 onClick={() => setActiveDay(12)}
                 className={`p-2 rounded-lg relative cursor-pointer font-medium transition-colors ${
-                  activeDay === 12 ? 'bg-[#00f2ff]/10 border border-[#00f2ff]/30 text-[#00f2ff]' : 'text-slate-400 hover:text-[#00f2ff]'
+                  activeDay === 12 ? 'bg-[#c9953a]/10 border border-[#c9953a]/30 text-[#c9953a]' : 'text-[#6a6a6a] hover:text-[#c9953a]'
                 }`}
               >
                 12
-                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#00f2ff]" />
+                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#c9953a]" />
               </div>
 
               <div 
                 onClick={() => setActiveDay(13)}
                 className={`p-2 rounded-lg relative cursor-pointer font-medium transition-colors ${
-                  activeDay === 13 ? 'bg-green-500/10 border border-green-500/35 text-green-400' : 'text-slate-400 hover:text-green-400'
+                  activeDay === 13 ? 'bg-green-500/10 border border-green-500/35 text-green-600' : 'text-[#6a6a6a] hover:text-green-600'
                 }`}
               >
                 13
@@ -361,8 +361,8 @@ export default function ProfileView() {
                 onClick={() => setActiveDay(14)}
                 className={`p-2 rounded-lg relative cursor-pointer font-bold transition-all ${
                   activeDay === 14 
-                    ? 'bg-[#00f2ff] text-black shadow-lg shadow-[#00f2ff]/20' 
-                    : 'bg-[#00f2ff]/10 border border-[#00f2ff]/25 text-[#00f2ff]'
+                    ? 'bg-[#c9953a] text-[#1a1a1a] shadow-lg shadow-[#c9953a]/20' 
+                    : 'bg-[#c9953a]/10 border border-[#c9953a]/25 text-[#c9953a]'
                 }`}
               >
                 14
@@ -371,7 +371,7 @@ export default function ProfileView() {
               {Array.from({ length: 17 }, (_, i) => {
                 const day = i + 15;
                 return (
-                  <div key={`day-${day}`} className="p-2 text-slate-400 font-medium">
+                  <div key={`day-${day}`} className="p-2 text-[#6a6a6a] font-medium">
                     {day}
                   </div>
                 );
@@ -379,23 +379,23 @@ export default function ProfileView() {
             </div>
 
             {/* Event detail rendering based on activeDay selection */}
-            <div className="mt-5 pt-4 border-t border-[#222]">
+            <div className="mt-5 pt-4 border-t border-[#e8e4df]">
               <AnimatePresence mode="wait">
                 {activeDay === 14 && (
                   <motion.div 
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="flex items-center gap-4 p-4 bg-[#161616] border border-[#222] rounded-xl border-l-4 border-l-[#00f2ff]"
+                    className="flex items-center gap-4 p-4 bg-[#f8f6f3] border border-[#e8e4df] rounded-xl border-l-4 border-l-[#c9953a]"
                   >
-                    <div className="shrink-0 text-center bg-[#0f0f0f] border border-[#222] p-2 rounded-lg w-12">
-                      <p className="text-[10px] uppercase font-bold text-slate-500">Oct</p>
-                      <p className="text-base font-bold text-white leading-none mt-0.5">14</p>
+                    <div className="shrink-0 text-center bg-white border border-[#e8e4df] p-2 rounded-lg w-12">
+                      <p className="text-[10px] uppercase font-bold text-[#8a8a8a]">Oct</p>
+                      <p className="text-base font-bold text-[#1a1a1a] leading-none mt-0.5">14</p>
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-bold text-white">Nexus Core Infrastructure Review</p>
-                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400">
-                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-slate-500" /> 10:00 AM - 11:30 AM</span>
+                      <p className="text-xs font-bold text-[#1a1a1a]">Nexus Core Infrastructure Review</p>
+                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#6a6a6a]">
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-[#8a8a8a]" /> 10:00 AM - 11:30 AM</span>
                         <span>•</span>
                         <span>Zoom</span>
                       </div>
@@ -407,16 +407,16 @@ export default function ProfileView() {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="flex items-center gap-4 p-4 bg-[#161616] border border-[#222] rounded-xl border-l-4 border-l-[#00f2ff]"
+                    className="flex items-center gap-4 p-4 bg-[#f8f6f3] border border-[#e8e4df] rounded-xl border-l-4 border-l-[#c9953a]"
                   >
-                    <div className="shrink-0 text-center bg-[#0f0f0f] border border-[#222] p-2 rounded-lg w-12">
-                      <p className="text-[10px] uppercase font-bold text-slate-500">Oct</p>
-                      <p className="text-base font-bold text-white leading-none mt-0.5">12</p>
+                    <div className="shrink-0 text-center bg-white border border-[#e8e4df] p-2 rounded-lg w-12">
+                      <p className="text-[10px] uppercase font-bold text-[#8a8a8a]">Oct</p>
+                      <p className="text-base font-bold text-[#1a1a1a] leading-none mt-0.5">12</p>
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-bold text-white">Project Aether Architectural Sync</p>
-                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400">
-                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-slate-500" /> 02:00 PM - 03:00 PM</span>
+                      <p className="text-xs font-bold text-[#1a1a1a]">Project Aether Architectural Sync</p>
+                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#6a6a6a]">
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-[#8a8a8a]" /> 02:00 PM - 03:00 PM</span>
                         <span>•</span>
                         <span>Google Meet</span>
                       </div>
@@ -428,16 +428,16 @@ export default function ProfileView() {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="flex items-center gap-4 p-4 bg-[#161616] border border-[#222] rounded-xl border-l-4 border-l-green-500"
+                    className="flex items-center gap-4 p-4 bg-[#f8f6f3] border border-[#e8e4df] rounded-xl border-l-4 border-l-green-500"
                   >
-                    <div className="shrink-0 text-center bg-[#0f0f0f] border border-[#222] p-2 rounded-lg w-12">
-                      <p className="text-[10px] uppercase font-bold text-slate-500">Oct</p>
-                      <p className="text-base font-bold text-white leading-none mt-0.5">13</p>
+                    <div className="shrink-0 text-center bg-white border border-[#e8e4df] p-2 rounded-lg w-12">
+                      <p className="text-[10px] uppercase font-bold text-[#8a8a8a]">Oct</p>
+                      <p className="text-base font-bold text-[#1a1a1a] leading-none mt-0.5">13</p>
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-bold text-white">Go Microservices Benchmarking</p>
-                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400">
-                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-slate-500" /> 09:00 AM - 10:30 AM</span>
+                      <p className="text-xs font-bold text-[#1a1a1a]">Go Microservices Benchmarking</p>
+                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#6a6a6a]">
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-[#8a8a8a]" /> 09:00 AM - 10:30 AM</span>
                         <span>•</span>
                         <span>Office Room 4B</span>
                       </div>
@@ -458,47 +458,47 @@ export default function ProfileView() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#0f0f0f] border border-[#222] p-6 rounded-2xl max-w-lg w-full shadow-2xl relative"
+              className="bg-white border border-[#e8e4df] p-6 rounded-2xl max-w-lg w-full shadow-2xl relative"
             >
               <button 
                 onClick={() => setIsEditing(false)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"
+                className="absolute top-4 right-4 text-[#6a6a6a] hover:text-[#1a1a1a] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
               
-              <h2 className="text-sm font-bold uppercase tracking-widest text-[#00f2ff] mb-4">Edit Profile details</h2>
+              <h2 className="text-sm font-bold uppercase tracking-widest text-[#c9953a] mb-4">Edit Profile details</h2>
               
               <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-400 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Full Name</label>
+                  <label className="block text-[#6a6a6a] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Full Name</label>
                   <input 
                     type="text" 
                     value={editForm.name}
                     onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full bg-[#161616] border border-[#222] p-3 rounded-xl text-slate-200 focus:outline-none focus:border-[#00f2ff] transition-all font-medium"
+                    className="w-full bg-[#f8f6f3] border border-[#e8e4df] p-3 rounded-xl text-[#2d2d2d] focus:outline-none focus:border-[#c9953a] transition-all font-medium"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Professional Title</label>
+                  <label className="block text-[#6a6a6a] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Professional Title</label>
                   <input 
                     type="text" 
                     value={editForm.title}
                     onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full bg-[#161616] border border-[#222] p-3 rounded-xl text-slate-200 focus:outline-none focus:border-[#00f2ff] transition-all font-medium"
+                    className="w-full bg-[#f8f6f3] border border-[#e8e4df] p-3 rounded-xl text-[#2d2d2d] focus:outline-none focus:border-[#c9953a] transition-all font-medium"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Biography</label>
+                  <label className="block text-[#6a6a6a] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Biography</label>
                   <textarea 
                     value={editForm.bio}
                     rows={4}
                     onChange={(e) => setEditForm(prev => ({ ...prev, bio: e.target.value }))}
-                    className="w-full bg-[#161616] border border-[#222] p-3 rounded-xl text-slate-200 focus:outline-none focus:border-[#00f2ff] transition-all leading-relaxed font-medium"
+                    className="w-full bg-[#f8f6f3] border border-[#e8e4df] p-3 rounded-xl text-[#2d2d2d] focus:outline-none focus:border-[#c9953a] transition-all leading-relaxed font-medium"
                     required
                   />
                 </div>
@@ -507,13 +507,13 @@ export default function ProfileView() {
                   <button 
                     type="button"
                     onClick={() => setIsEditing(false)}
-                    className="bg-[#161616] hover:bg-[#222] border border-[#222] text-slate-400 hover:text-white px-4 py-2.5 rounded-xl font-bold transition-all cursor-pointer"
+                    className="bg-[#f8f6f3] hover:bg-[#222] border border-[#e8e4df] text-[#6a6a6a] hover:text-[#1a1a1a] px-4 py-2.5 rounded-xl font-bold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit"
-                    className="bg-[#00f2ff] hover:bg-[#00f2ff]/90 text-black px-5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow-md shadow-[#00f2ff]/15 active:scale-95 transition-all cursor-pointer"
+                    className="bg-[#c9953a] hover:bg-[#c9953a]/90 text-[#1a1a1a] px-5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow-md shadow-[#c9953a]/15 active:scale-95 transition-all cursor-pointer"
                   >
                     <Save className="w-4 h-4" />
                     Save Details

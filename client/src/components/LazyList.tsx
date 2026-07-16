@@ -57,10 +57,10 @@ export default function LazyList<T>({
         <div ref={observerRef} className="py-4 flex justify-center items-center">
           {placeholder || (
             <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
-              <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider ml-2">Lazy buffering...</span>
+              <div className="w-1.5 h-1.5 bg-[#c9953a] rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
+              <div className="w-1.5 h-1.5 bg-[#c9953a] rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
+              <div className="w-1.5 h-1.5 bg-[#c9953a] rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
+              <span className="text-[10px] font-mono text-[#8a8a8a] uppercase tracking-wider ml-2">Lazy buffering...</span>
             </div>
           )}
         </div>

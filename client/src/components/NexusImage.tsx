@@ -24,17 +24,17 @@ export default function NexusImage({ src, alt, className = "" }: NexusImageProps
   }, [src]);
 
   return (
-    <div className={`relative overflow-hidden bg-slate-900/60 ${className}`}>
+    <div className={`relative overflow-hidden bg-[#e8e4df]/60 ${className}`}>
       {/* Loading state shimmer */}
       {!loaded && !error && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-full animate-pulse bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800" />
+          <div className="w-full h-full animate-pulse bg-gradient-to-r from-[#e8e4df] via-[#f0ece7] to-[#e8e4df]" />
         </div>
       )}
 
       {/* Error fallback */}
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-950 text-xs text-slate-500 font-mono">
+        <div className="absolute inset-0 flex items-center justify-center bg-[#f8f6f3] text-xs text-[#8a8a8a] font-mono">
           [Image Error]
         </div>
       )}

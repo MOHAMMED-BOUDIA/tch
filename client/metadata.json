@@ -1,5 +1,5 @@
 {
-  "name": "Nexus Pro",
+  "name": "Nexora",
   "description": "Enterprise workspace dashboard featuring high-performance team messaging, an interactive knowledge graph network, and a detailed professional profile with metrics, portfolio, and calendars.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
