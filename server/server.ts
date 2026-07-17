@@ -1,6 +1,6 @@
 import express from "express";
-import path from "path";
-import fs from "fs";
+import { join } from "path";
+import { existsSync } from "fs";
 import http from "http";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -33,11 +33,11 @@ async function startServer() {
   app.use("/api/admin", adminRouter);
   app.use("/api/messages", messagesRouter);
 
-  const distPath = path.join(process.cwd(), "dist");
-  if (fs.existsSync(distPath)) {
+  const distPath = join(process.cwd(), "dist");
+  if (existsSync(distPath)) {
     app.use(express.static(distPath));
     app.get("/{*path}", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+      res.sendFile(join(distPath, "index.html"));
     });
   }
 
