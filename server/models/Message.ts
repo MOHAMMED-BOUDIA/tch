@@ -7,6 +7,7 @@ export interface IMessage extends Document {
   content: string;
   edited: boolean;
   deleted: boolean;
+  createdAt: Date;
 }
 
 const MessageSchema = new Schema(

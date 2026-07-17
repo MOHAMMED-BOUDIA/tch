@@ -10,6 +10,7 @@ export interface IProject extends Document {
   performanceScore?: string;
   createdBy: mongoose.Types.ObjectId;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const ProjectSchema = new Schema(

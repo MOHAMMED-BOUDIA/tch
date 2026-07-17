@@ -13,6 +13,7 @@ export interface IUser extends Document {
   website?: string;
   avatar?: string;
   lastLogin?: Date;
+  createdAt: Date;
 }
 
 const UserSchema = new Schema(

@@ -4,6 +4,7 @@ export interface IGroup extends Document {
   name: string;
   avatar?: string;
   members: mongoose.Types.ObjectId[];
+  createdAt: Date;
 }
 
 const GroupSchema = new Schema(

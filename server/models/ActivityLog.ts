@@ -6,6 +6,7 @@ export interface IActivityLog extends Document {
   action: string;
   details?: string;
   ip?: string;
+  createdAt: Date;
 }
 
 const ActivityLogSchema = new Schema(
