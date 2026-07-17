@@ -4,7 +4,7 @@ import User from "../models/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "nexus-admin-secret-key-change-in-production";
 
-export type UserRole = "user" | "coordinator" | "admin";
+export type UserRole = "user" | "coordinator" | "admin" | "bot";
 
 export interface AuthPayload {
   userId: string;
