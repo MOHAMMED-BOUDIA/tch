@@ -7,6 +7,10 @@ export interface IUser extends Document {
   role: "user" | "coordinator" | "admin" | "bot";
   status: "active" | "suspended";
   name?: string;
+  title?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
   avatar?: string;
   lastLogin?: Date;
 }
