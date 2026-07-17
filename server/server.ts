@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import fs from "fs";
+import * as fs from "fs";
 import http from "http";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
