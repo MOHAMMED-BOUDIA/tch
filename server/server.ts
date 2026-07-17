@@ -1,6 +1,6 @@
 import express from "express";
-import { join } from "path";
-import { existsSync } from "fs";
+import path from "path";
+import fs from "fs";
 import http from "http";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -15,9 +15,9 @@ import messagesRouter from "./routers/messages.js";
 import { connectDb } from "./db.js";
 import { createSocketServer } from "./socket.js";
 
-dotenv.config();
-
 async function startServer() {
+  dotenv.config();
+
   await connectDb();
 
   const app = express();
@@ -33,13 +33,15 @@ async function startServer() {
   app.use("/api/admin", adminRouter);
   app.use("/api/messages", messagesRouter);
 
-  const distPath = join(process.cwd(), "dist");
-  if (existsSync(distPath)) {
-    app.use(express.static(distPath));
-    app.get("/{*path}", (req, res) => {
-      res.sendFile(join(distPath, "index.html"));
-    });
-  }
+  const distPath = path.join(process.cwd(), "dist");
+  try {
+    if (fs.existsSync(distPath)) {
+      app.use(express.static(distPath));
+      app.get("/{*path}", (req, res) => {
+        res.sendFile(path.join(distPath, "index.html"));
+      });
+    }
+  } catch {}
 
   const server = http.createServer(app);
   createSocketServer(server);
