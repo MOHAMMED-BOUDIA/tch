@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ISetting extends Document {
+export interface IPlatformSetting extends Document {
   key: string;
   value: string;
 }
 
-const SettingSchema = new Schema(
+const PlatformSettingSchema = new Schema(
   {
     key: { type: String, required: true, unique: true },
     value: { type: String, required: true },
@@ -13,4 +13,4 @@ const SettingSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model<ISetting>("Setting", SettingSchema);
+export default mongoose.model<IPlatformSetting>("PlatformSetting", PlatformSettingSchema);

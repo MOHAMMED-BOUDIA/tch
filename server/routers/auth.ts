@@ -20,10 +20,9 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(403).json({ error: "Account is suspended" });
     return;
   }
-  if (user.role === "user") {
-    res.status(403).json({ error: "Regular users are not allowed to access the platform yet" });
-    return;
-  }
+  user.lastLogin = new Date();
+  await user.save();
+
   const token = generateToken({ userId: user._id.toString(), role: user.role });
   res.json({
     token,
@@ -86,7 +85,6 @@ router.post("/forgot-password", async (req: Request, res: Response) => {
     return;
   }
   const resetToken = generateToken({ userId: user._id.toString(), role: user.role });
-  console.log(`[Password Reset] Token for ${email}: ${resetToken}`);
   res.json({ message: "If that email exists, a reset link has been sent." });
 });
 

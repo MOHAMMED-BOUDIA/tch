@@ -4,10 +4,11 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  role: "user" | "coordinateur" | "admin" | "bot";
+  role: "user" | "coordinator" | "admin" | "bot";
   status: "active" | "suspended";
   name?: string;
   avatar?: string;
+  lastLogin?: Date;
 }
 
 const UserSchema = new Schema(
@@ -17,7 +18,7 @@ const UserSchema = new Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["user", "coordinateur", "admin", "bot"],
+      enum: ["user", "coordinator", "admin", "bot"],
       default: "user",
     },
     status: {
@@ -26,7 +27,12 @@ const UserSchema = new Schema(
       default: "active",
     },
     name: { type: String },
+    title: { type: String, default: "" },
+    bio: { type: String, default: "" },
+    location: { type: String, default: "" },
+    website: { type: String, default: "" },
     avatar: { type: String },
+    lastLogin: { type: Date },
   },
   { timestamps: true }
 );

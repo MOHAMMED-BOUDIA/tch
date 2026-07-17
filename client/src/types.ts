@@ -19,6 +19,8 @@ export interface Project {
   name: string;
   status: string;
   description: string;
+  image?: string;
+  link?: string;
   contributorsCount: number;
   performanceScore?: string;
 }
@@ -26,6 +28,7 @@ export interface Project {
 export interface Note {
   id: string;
   title: string;
+  content?: string;
   updatedAt: string;
   status: string;
 }

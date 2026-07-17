@@ -4,7 +4,7 @@ import User from "../models/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "nexus-admin-secret-key-change-in-production";
 
-export type UserRole = "user" | "coordinateur" | "admin";
+export type UserRole = "user" | "coordinator" | "admin";
 
 export interface AuthPayload {
   userId: string;
@@ -27,23 +27,32 @@ export function verifyToken(token: string): AuthPayload {
   return jwt.verify(token, JWT_SECRET) as AuthPayload;
 }
 
-export function requireAuth(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies?.token || req.headers.authorization?.replace("Bearer ", "");
-  if (!token) {
-    res.status(401).json({ error: "Authentication required" });
-    return;
-  }
+function requireAuth(req: Request, res: Response, next: NextFunction) {
   try {
+    const token = req.cookies?.token || req.headers.authorization?.replace("Bearer ", "");
+    if (!token) {
+      res.status(401).json({ error: "Authentication required" });
+      return;
+    }
     req.user = verifyToken(token);
     next();
-  } catch {
-    res.status(401).json({ error: "Invalid or expired token" });
+  } catch (err) {
+    if (err instanceof jwt.JsonWebTokenError || err instanceof jwt.TokenExpiredError) {
+      res.status(401).json({ error: "Invalid or expired token" });
+      return;
+    }
+    console.error("Auth error:", (err as Error).message);
+    res.status(500).json({ error: "Server error" });
   }
 }
 
-async function checkSuspended(req: Request, res: Response, next: NextFunction) {
+async function checkActive(req: Request, res: Response, next: NextFunction) {
   try {
-    const user = await User.findById(req.user!.userId);
+    if (!req.user) {
+      res.status(401).json({ error: "Authentication required" });
+      return;
+    }
+    const user = await User.findById(req.user.userId);
     if (!user || user.status === "suspended") {
       res.status(403).json({ error: "Account is suspended" });
       return;
@@ -54,16 +63,19 @@ async function checkSuspended(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function requireRole(...roles: UserRole[]) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    requireAuth(req, res, async () => {
+function requireRole(...roles: UserRole[]) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    requireAuth(req, res, () => {
       if (!req.user || !roles.includes(req.user.role)) {
         res.status(403).json({ error: `Access restricted to: ${roles.join(", ")}` });
         return;
       }
-      await checkSuspended(req, res, next);
+      checkActive(req, res, next);
     });
   };
 }
 
-export const requireChatAccess = requireRole("admin", "coordinateur");
+export { requireAuth };
+export const requireAdmin = requireRole("admin");
+export const requireCoordinator = requireRole("admin", "coordinator");
+export const requireUser = requireRole("user", "coordinator", "admin");

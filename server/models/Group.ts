@@ -2,11 +2,15 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IGroup extends Document {
   name: string;
+  avatar?: string;
+  members: mongoose.Types.ObjectId[];
 }
 
 const GroupSchema = new Schema(
   {
     name: { type: String, required: true },
+    avatar: { type: String, default: "" },
+    members: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

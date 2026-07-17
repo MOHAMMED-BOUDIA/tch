@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Bolt, ArrowRight, ArrowLeft, Calendar, MessageSquare, User, AtSign } from "lucide-react";
 
 interface Props {
@@ -67,8 +67,8 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
   };
 
   return (
-      <div className="min-h-screen bg-[#FEF3C8] flex items-center justify-center p-4 md:p-6">
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl shadow-black/5 overflow-hidden flex flex-col md:flex-row min-h-[600px] md:min-h-[680px]">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4 md:p-6">
+      <div className="w-full max-w-5xl bg-[#111827] rounded-3xl shadow-2xl shadow-black/30 overflow-hidden flex flex-col md:flex-row min-h-[600px] md:min-h-[680px]">
         {/* ─── LEFT: Form ─── */}
         <div className="flex-1 flex items-center justify-center p-8 md:p-12 lg:p-16">
           <div className="w-full max-w-sm space-y-6">
@@ -77,7 +77,7 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
               <button
                 type="button"
                 onClick={onBackToLanding}
-                className="flex items-center gap-1.5 text-xs text-[#8a8a8a] hover:text-[#1a1a1a] transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-xs text-[#64748B] hover:text-[#F8FAFC] transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Back
@@ -86,20 +86,20 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
 
             {/* Logo */}
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 border border-amber-200/60 flex items-center justify-center">
-                <Bolt className="text-amber-600 w-5 h-5" />
+              <div className="w-9 h-9 rounded-xl bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center">
+                <Bolt className="text-[#00E5FF] w-5 h-5" />
               </div>
-              <span className="text-sm font-semibold text-[#1a1a1a] tracking-tight">
+              <span className="text-sm font-semibold text-[#F8FAFC] tracking-tight">
                 stgos
               </span>
             </div>
 
             {/* Heading */}
             <div className="space-y-1.5">
-              <h1 className="text-3xl font-bold text-[#1a1a1a] tracking-tight">
+              <h1 className="text-3xl font-bold text-[#F8FAFC] tracking-tight">
                 {mode === "register" ? "Create account" : mode === "forgot" ? "Reset password" : "Welcome back"}
               </h1>
-              <p className="text-sm text-[#8a8a8a]">
+              <p className="text-sm text-[#64748B]">
                 {mode === "register" ? "Join the network to start collaborating." : mode === "forgot" ? "Enter your email to receive a reset link." : "Sign in to your account to continue."}
               </p>
             </div>
@@ -120,29 +120,29 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
               {mode === "register" && (
                 <>
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-semibold text-[#6a6a6a] uppercase tracking-wider">Full Name</label>
+                    <label className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider">Full Name</label>
                     <div className="relative">
-                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
                       <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Alex Rivera"
-                        className="w-full bg-[#f8f6f3] h-12 pl-10 pr-4 rounded-xl border border-[#e8e4df] text-sm text-[#1a1a1a] focus:ring-2 focus:ring-amber-200 focus:border-amber-300 transition-all outline-none placeholder:text-[#b0b0b0]"
+                        className="w-full bg-[#1E293B] h-12 pl-10 pr-4 rounded-xl border border-[#334155] text-sm text-[#F8FAFC] focus:ring-2 focus:ring-[#00E5FF]/30 focus:border-[#00E5FF] transition-all outline-none placeholder:text-[#64748B]"
                         required
                       />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-semibold text-[#6a6a6a] uppercase tracking-wider">Username</label>
+                    <label className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider">Username</label>
                     <div className="relative">
-                      <AtSign className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                      <AtSign className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
                       <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="alexrivera"
-                        className="w-full bg-[#f8f6f3] h-12 pl-10 pr-4 rounded-xl border border-[#e8e4df] text-sm text-[#1a1a1a] focus:ring-2 focus:ring-amber-200 focus:border-amber-300 transition-all outline-none placeholder:text-[#b0b0b0]"
+                        className="w-full bg-[#1E293B] h-12 pl-10 pr-4 rounded-xl border border-[#334155] text-sm text-[#F8FAFC] focus:ring-2 focus:ring-[#00E5FF]/30 focus:border-[#00E5FF] transition-all outline-none placeholder:text-[#64748B]"
                         required
                       />
                     </div>
@@ -151,15 +151,15 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
               )}
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold text-[#6a6a6a] uppercase tracking-wider">Email</label>
+                <label className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@company.com"
-                    className="w-full bg-[#f8f6f3] h-12 pl-10 pr-4 rounded-xl border border-[#e8e4df] text-sm text-[#1a1a1a] focus:ring-2 focus:ring-amber-200 focus:border-amber-300 transition-all outline-none placeholder:text-[#b0b0b0]"
+                    className="w-full bg-[#1E293B] h-12 pl-10 pr-4 rounded-xl border border-[#334155] text-sm text-[#F8FAFC] focus:ring-2 focus:ring-[#00E5FF]/30 focus:border-[#00E5FF] transition-all outline-none placeholder:text-[#64748B]"
                     required
                   />
                 </div>
@@ -168,29 +168,29 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
               {mode !== "forgot" && (
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-semibold text-[#6a6a6a] uppercase tracking-wider">Password</label>
+                    <label className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider">Password</label>
                     <button
                       type="button"
                       onClick={() => setMode("forgot")}
-                      className="text-[11px] text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer"
+                      className="text-[11px] text-[#00E5FF] hover:text-[#3B82F6] font-medium transition-colors cursor-pointer"
                     >
                       Forgot?
                     </button>
                   </div>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter password"
-                      className="w-full bg-[#f8f6f3] h-12 pl-10 pr-11 rounded-xl border border-[#e8e4df] text-sm text-[#1a1a1a] focus:ring-2 focus:ring-amber-200 focus:border-amber-300 transition-all outline-none placeholder:text-[#b0b0b0]"
+                      className="w-full bg-[#1E293B] h-12 pl-10 pr-11 rounded-xl border border-[#334155] text-sm text-[#F8FAFC] focus:ring-2 focus:ring-[#00E5FF]/30 focus:border-[#00E5FF] transition-all outline-none placeholder:text-[#64748B]"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#b0b0b0] hover:text-[#6a6a6a] transition-colors cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#94A3B8] transition-colors cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -200,15 +200,15 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
 
               {mode === "register" && (
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-semibold text-[#6a6a6a] uppercase tracking-wider">Confirm Password</label>
+                  <label className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider">Confirm Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0]" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
                     <input
                       type={showPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm password"
-                      className="w-full bg-[#f8f6f3] h-12 pl-10 pr-4 rounded-xl border border-[#e8e4df] text-sm text-[#1a1a1a] focus:ring-2 focus:ring-amber-200 focus:border-amber-300 transition-all outline-none placeholder:text-[#b0b0b0]"
+                      className="w-full bg-[#1E293B] h-12 pl-10 pr-4 rounded-xl border border-[#334155] text-sm text-[#F8FAFC] focus:ring-2 focus:ring-[#00E5FF]/30 focus:border-[#00E5FF] transition-all outline-none placeholder:text-[#64748B]"
                       required
                     />
                   </div>
@@ -218,7 +218,7 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white text-sm font-semibold rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-black/10 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                className="w-full h-12 bg-[#00E5FF] hover:bg-[#3B82F6] text-[#0F172A] text-sm font-semibold rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-black/30 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
               >
                 {loading
                   ? mode === "register" ? "Creating account..." : mode === "forgot" ? "Sending..." : "Signing in..."
@@ -232,16 +232,16 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
                 {/* Divider */}
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-[#e8e4df]" />
+                    <div className="w-full border-t border-[#1E293B]" />
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-white px-4 text-[#b0b0b0]">or continue with</span>
+                    <span className="bg-[#111827] px-4 text-[#64748B]">or continue with</span>
                   </div>
                 </div>
 
                 {/* Social buttons */}
                 <div className="grid grid-cols-2 gap-3">
-                  <button className="h-11 bg-[#f8f6f3] hover:bg-[#f0ece7] border border-[#e8e4df] rounded-xl text-xs font-medium text-[#4a4a4a] transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer">
+                  <button className="h-11 bg-[#1E293B] hover:bg-[#334155] border border-[#334155] rounded-xl text-xs font-medium text-[#cbd5e1] transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -250,8 +250,8 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
                     </svg>
                     Google
                   </button>
-                  <button className="h-11 bg-[#f8f6f3] hover:bg-[#f0ece7] border border-[#e8e4df] rounded-xl text-xs font-medium text-[#4a4a4a] transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#1a1a1a">
+                  <button className="h-11 bg-[#1E293B] hover:bg-[#334155] border border-[#334155] rounded-xl text-xs font-medium text-[#cbd5e1] transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#F8FAFC">
                       <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
                     </svg>
                     Apple
@@ -261,12 +261,12 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
             )}
 
             {/* Toggle between login/register/forgot */}
-            <p className="text-center text-xs text-[#b0b0b0]">
+            <p className="text-center text-xs text-[#64748B]">
               {mode === "forgot" ? (
                 <button
                   type="button"
                   onClick={() => { setMode("login"); setError(""); setSuccessMsg(""); }}
-                  className="text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer"
+                  className="text-[#00E5FF] hover:text-[#3B82F6] font-medium transition-colors cursor-pointer"
                 >
                   Back to sign in
                 </button>
@@ -276,7 +276,7 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
                   <button
                     type="button"
                     onClick={() => { setMode("login"); setError(""); setSuccessMsg(""); }}
-                    className="text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer"
+                    className="text-[#00E5FF] hover:text-[#3B82F6] font-medium transition-colors cursor-pointer"
                   >
                     Sign in
                   </button>
@@ -287,7 +287,7 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
                   <button
                     type="button"
                     onClick={() => { setMode("register"); setError(""); setSuccessMsg(""); }}
-                    className="text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer"
+                    className="text-[#00E5FF] hover:text-[#3B82F6] font-medium transition-colors cursor-pointer"
                   >
                     Sign up
                   </button>
@@ -308,53 +308,53 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
           />
 
           {/* Warm gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#c9953a]/20 via-[#FEF3C8]/40 to-[#FEF3C8]/70 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#00E5FF]/20 via-[#0F172A]/40 to-[#0F172A]/70 pointer-events-none" />
 
           {/* Subtle dark vignette */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/5 pointer-events-none" />
 
           {/* Floating chat bubble */}
-          <div className="absolute top-8 left-8 backdrop-blur-xl bg-white/80 rounded-2xl px-4 py-3 shadow-xl border border-white/50 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-amber-100 border border-amber-200/60 flex items-center justify-center shrink-0">
-              <MessageSquare className="w-4 h-4 text-amber-600" />
+          <div className="absolute top-8 left-8 backdrop-blur-xl bg-[#111827]/80 rounded-2xl px-4 py-3 shadow-xl border border-[#1E293B]/50 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center shrink-0">
+              <MessageSquare className="w-4 h-4 text-[#00E5FF]" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-[#1a1a1a]">Team Chat</p>
-              <p className="text-[8px] text-[#6a6a6a]">8 new messages</p>
+              <p className="text-[10px] font-bold text-[#F8FAFC]">Team Chat</p>
+              <p className="text-[8px] text-[#94A3B8]">8 new messages</p>
             </div>
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0" />
           </div>
 
           {/* Floating calendar card */}
-          <div className="absolute bottom-12 right-8 backdrop-blur-xl bg-white/80 rounded-2xl p-4 shadow-xl border border-white/50 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-amber-100 border border-amber-200/60 flex items-center justify-center shrink-0">
-              <Calendar className="w-4 h-4 text-amber-600" />
+          <div className="absolute bottom-12 right-8 backdrop-blur-xl bg-[#111827]/80 rounded-2xl p-4 shadow-xl border border-[#1E293B]/50 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center shrink-0">
+              <Calendar className="w-4 h-4 text-[#00E5FF]" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-[#1a1a1a]">Today's Standup</p>
-              <p className="text-[8px] text-[#6a6a6a]">9:00 AM · 6 attendees</p>
+              <p className="text-[10px] font-bold text-[#F8FAFC]">Today's Standup</p>
+              <p className="text-[8px] text-[#94A3B8]">9:00 AM · 6 attendees</p>
             </div>
           </div>
 
           {/* Floating avatar stack */}
-          <div className="absolute bottom-12 left-8 backdrop-blur-xl bg-white/70 rounded-xl px-4 py-2.5 shadow-xl border border-white/50 flex items-center gap-3">
+          <div className="absolute bottom-12 left-8 backdrop-blur-xl bg-[#111827]/70 rounded-xl px-4 py-2.5 shadow-xl border border-[#1E293B]/50 flex items-center gap-3">
             <div className="flex items-center -space-x-2">
-              {["#d4a853", "#e8a87c", "#95b8d1", "#c9a0dc"].map((color, i) => (
+              {["#00E5FF", "#3B82F6", "#00E5FF", "#3B82F6"].map((color, i) => (
                 <div
                   key={i}
-                  className="w-7 h-7 rounded-full border-2 border-white"
+                  className="w-7 h-7 rounded-full border-2 border-[#0F172A]"
                   style={{ background: color }}
                 />
               ))}
-              <div className="w-7 h-7 rounded-full border-2 border-white bg-amber-100 flex items-center justify-center">
-                <span className="text-[8px] font-bold text-amber-700">+3</span>
+              <div className="w-7 h-7 rounded-full border-2 border-[#0F172A] bg-[#00E5FF]/10 flex items-center justify-center">
+                <span className="text-[8px] font-bold text-[#00E5FF]">+3</span>
               </div>
             </div>
-            <span className="text-[9px] text-[#6a6a6a] font-medium">Active now</span>
+            <span className="text-[9px] text-[#94A3B8] font-medium">Active now</span>
           </div>
 
           {/* Soft glowing accent */}
-          <div className="absolute top-1/3 right-1/4 w-2 h-2 rounded-full bg-[#c9953a]/30 blur-sm animate-ping" style={{ animationDuration: "3s" }} />
+          <div className="absolute top-1/3 right-1/4 w-2 h-2 rounded-full bg-[#00E5FF]/30 blur-sm animate-ping" style={{ animationDuration: "3s" }} />
         </div>
       </div>
     </div>
