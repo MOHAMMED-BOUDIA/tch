@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, Bolt, ArrowRight, ArrowLeft, Calendar, MessageSquare, User, AtSign } from "lucide-react";
 
 interface Props {
@@ -10,6 +11,7 @@ import { API_URL } from "@/lib/client-env";
 const API = API_URL;
 
 export default function UserLogin({ onLogin, onBackToLanding }: Props) {
+  const router = useRouter();
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -51,6 +53,11 @@ export default function UserLogin({ onLogin, onBackToLanding }: Props) {
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Failed");
+      }
+      if (mode === "register") {
+        setSuccessMsg("Account created successfully! Redirecting to login...");
+        setTimeout(() => router.push("/login"), 1500);
+        return;
       }
       if (mode === "forgot") {
         setSuccessMsg(data.message || "Check your email for the reset link.");

@@ -7,7 +7,8 @@ import { generateToken, errorResponse, jsonResponse } from "@/lib/auth";
 export async function POST(req: NextRequest) {
   try {
     await connectDb();
-    const { username, email, password, name } = await req.json();
+    const { username, email: rawEmail, password, name } = await req.json();
+    const email = rawEmail?.toLowerCase();
     if (!username || !email || !password) {
       return jsonResponse({ error: "Username, email, and password are required" }, 400);
     }
