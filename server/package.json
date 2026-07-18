@@ -1,7 +1,6 @@
 {
   "name": "nexus-server",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
     "dev": "nodemon",
     "start": "tsx server.ts"
