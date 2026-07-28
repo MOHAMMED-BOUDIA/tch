@@ -37,8 +37,7 @@ export async function POST(req: NextRequest) {
       return jsonResponse({ error: "Account is suspended" }, 403);
     }
 
-    user.lastLogin = new Date();
-    await user.save();
+    await User.updateOne({ _id: user._id }, { $set: { lastLogin: new Date() } });
     log("Last login updated");
 
     const token = generateToken({ userId: user._id.toString(), role: user.role });

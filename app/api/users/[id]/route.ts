@@ -41,6 +41,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       }
     }
 
+    if (updates.status === "online") updates.status = "active";
+    if (updates.status === "offline") updates.status = "suspended";
+
     if (Object.keys(updates).length === 0) {
       return jsonResponse({ error: "No valid fields to update" }, 400);
     }
