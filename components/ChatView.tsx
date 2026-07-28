@@ -41,7 +41,7 @@ interface GroupInfo {
 
 import { API_URL, SOCKET_URL as ENV_SOCKET_URL } from "@/lib/client-env";
 const API = API_URL;
-const SOCKET_URL = ENV_SOCKET_URL || API || window.location.origin;
+const SOCKET_URL = ENV_SOCKET_URL || "http://localhost:3001";
 
 const AVATARS = [
   "https://i.pravatar.cc/40?u=member.alpha@nexus",
@@ -110,7 +110,7 @@ export default function ChatView() {
   const chatUserName = searchParams.get("chatUser");
   const chatUser = chatUserName ? { id: 0, name: chatUserName } : null;
 
-  const currentUserId = localStorage.getItem("user_id") || "";
+  const [currentUserId, setCurrentUserId] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const threadEndRef = useRef<HTMLDivElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -135,6 +135,7 @@ export default function ChatView() {
 
   // ─── Consume route state once ───
   useEffect(() => {
+    setCurrentUserId(localStorage.getItem("user_id") || "");
     if (chatUser) {
       window.history.replaceState({}, document.title);
     }
@@ -855,8 +856,7 @@ export default function ChatView() {
                         </button>
                       </div>
                       <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar">
-                        {groupMembers.map(m => {
-                          const currentUserId = localStorage.getItem("user_id") || "";
+                          {groupMembers.map(m => {
                           const isSelf = m.id === currentUserId;
                           return (
                             <div key={m.id} className="flex items-center justify-between p-2 rounded-xl hover:bg-[#111827] transition-colors group">

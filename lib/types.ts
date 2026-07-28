@@ -1,5 +1,6 @@
 export interface GraphNode {
   id: number;
+  userId: string;
   name: string;
   role: string;
   avatar: string;

@@ -14,50 +14,11 @@ import NexusImage from "./NexusImage";
 import type { Project, Note, Activity as ProfileActivity } from "@/lib/types";
 import { API_URL } from "@/lib/client-env";
 
-const COVER_BANNER = "https://lh3.googleusercontent.com/aida-public/AB6AXuAgmCtKeo7BXCQqpo6mZKPeaOk3MsPnNqULQKi36hjXl_TjCdfCmkJDdXoQzWSTGTGIykGd_WVWCLyI9-UzQ_NcJDyguxlaQdyoCQ99yfHxAHR9nuUlUXob1vVsFCCONNIwegi5murEW8YkH1R6JmcfAwlRA89tfdD0HBKS5DiKVY1v2mBGS09pJQNqL91vvJjg5Z_kOnDtUrD4p2ojeLNAMNFIP8_GBn24nOqqrjDCN2-62kdo1b64cKnH619km8FUUbkScwD9WCzK";
-const PROFILE_AVATAR = "https://lh3.googleusercontent.com/aida-public/AB6AXuB2V_sxDq3DOHSTQP8fIFkMRLjcO10-lJkRUH-Ov7JssRfq80eaUo7029AEuTVpTmOYZwvSeT5uduWa3hGS0fAIINQBkiPBPOvcpNlscGXJGNfKExupdoiXioYsDlzJuYCmVz1KB2K0-jWFL-1ZuLYwhMRWivAAmOPHzgqUK6Rr88wZnBX-Md2GaNNFV-u3GfFlgJEjp1RM5o86qR4EWjUabLgEfASkVIQKQBktEachzyMjVnda9kNeTijR2E5H0SfvwCEOoRKW2_06";
-const SARAH_CHEN_AVATAR = "https://lh3.googleusercontent.com/aida-public/AB6AXuDGh8_IZ7zOk6A22VBMzUKVrpkdmFTpCkpwdnq7OSAKsAFBC6uVvquMrckC_rl6AUmg3zxvHNCI8qRBbuT7Nl6zhqOSvqzeBeOyOcddZdb9dj7KC4a8PBDeVo-Wbhool7K0FzKx4rq2Nl96rGDrxxNzD6eS5cNoMbKVBhi4QXX2wI1_KnBBYVWkSXLeSVCQ7IhRutEf4MyZYw2C5PMAOBsLCNNsG34f3Xxy27GYv_4RU4611U3ZNUwBPpT2uuuU-5BLCdpp2GVrICm-";
-const MARCUS_AVATAR = "https://lh3.googleusercontent.com/aida-public/AB6AXuCehcfhNjJ_tUDQsSiuzAxAvzkmgsSHPEm2jPor6CSDl1essQWi65M9yCbnYzl4wXHhJ768QTmwMThPF5V_NXX4sPRyo3fLUtBtxiCf4LHmyfxG72U2CFMnOA0tfECuCyeBt-nL3DZo3-GNU10cs1gMulGyQi4EmdHMglebsh_xOf8_gNv9KOd8LSshWWMgEjIVw2HRl3-T9Q84e1je2a3FuHbj6JNNjeiU26D1wcVA4prJpmmm8HtflPSH9th2jkqZICcM7fhyR9Hs";
-const PORTFOLIO_1 = "https://lh3.googleusercontent.com/aida-public/AB6AXuDwYEhBqOqBZl3w3INsiZttRD-Etpd0WX5_B-aThv8gnqtrlyiMrvpKyQaz1ez45HnKBcm_879BmQGo64vagR1vwJ-qBL8eAj54RXdce9T1fWlkuV2TADi5iucECiy6K-W2wRsiWudVCZPhnsKje97wp8o_1cSD7vflOh5cFxvESv96rTn4T_bwnXCGmkmOKcnqDh5Nima-8FiFnIQ4CjJ4QiU46d97agHLP1IE9VJrhNyokT54-rX7ypvVkkFLAt5UrwoH8PUJg24M";
-const PORTFOLIO_2 = "https://lh3.googleusercontent.com/aida-public/AB6AXuB5_bh5j2uJZ7aGGr-W_iVbWJ4_8iIO3OrmysAwgcHIGY1qgnLGf8qrc7y4WtIsyrf5rCEZLo02EeTFywRLrNMbtygEly2L0lXzYDlo7bipAVEYDdSRJOZN-21oyZwowXEJKaDHmUYeqbElxcrbWkq3TCghzjd1Pi9WVo-MfK6KoVhPgVEd5Qsj5bELnlx-hcC8CWAwl0peN8ehjnqV0hpLhCctPu0qmHOXCjk75z9zsilNH1kCIFHKdYaFZEob4YXsnNd3vn27xsJx";
-const PORTFOLIO_3 = "https://lh3.googleusercontent.com/aida-public/AB6AXuCFoGSMJQS3Wd2VRK2EicCAgZ20ql14FDlCzgcF31NfgfDJH7UYLsxTP7ffCshLXIulMhzWrqCn_tNguwGtzSH8dZSY6DpJbMFnGNI9lSY-vsmPz4wtL0hODZu8jLHQ90hbTYj9m5hCAUpUXa4UcX8whEg5rv8puQvbph8xT3Plm0p8uUfdH4MlI6C9Ev0aJ8vVeDZ6WxkX9xsJN9tq_MfVir6qcHEV0Bn_XB32Zctax2qBOeJLABcfXxMjVOcyiQbHI1SkFp2bniwQ";
-const PORTFOLIO_4 = "https://lh3.googleusercontent.com/aida-public/AB6AXuCnkKfh1vCB59qBNpCyBwf1OaFFRwlHWMLIhDxSIPR6gMNN8bP7JQGu6lhA1NGB6TlgSRvmCh8HGJliq4-2L4KBjQ0x5SDSIIHq9UE4x2G1_7-VmEYG5kI9g--MyQzE_JG49irPC7t5RBNkKdoY1MsN1cNL0JWNNOJWMBETpLQGOcHfBqasHRT0wn_34iGbkTX4RQH0P7vSTKB0vF9Z9uO5fYLjClyZPCwB62SMEqQfSQaEWEfsW1tYxQfHfQ4kIH2S1ncNPMsX7mtI";
-const PORTFOLIO_5 = "https://lh3.googleusercontent.com/aida-public/AB6AXuDibqGF6Ofm7ms2-ntHI9H8bP-4JkSIFryXaRbmB8k6Am0mhPBftFNAgYRfFnz8RnRvl2v6KqKBvJQqGrhdJ6XKD8MW0v_5vRC5yAIUGJ5fNT1YjCDqWDFC8YymOZXIYTFdQ-TFr6IR65vLNBsNvFrmYJq0MhfHU7LAEcTKyMpv-V5aTb1FqspSUYw7l4mHkQZ_h8UQGX-UfV07HGQQqW0p5aNj1r1O4yYJnxUlApeBqAVJL55xSIEoX5EYxbKihSNqy_nmd06G4Aq2";
-
-const initialProjects: Project[] = [
-  { id: "p1", name: "Project Aether", status: "Active Now", description: "Next-gen real-time synchronization engine for distributed workspace collaboration.", contributorsCount: 12 },
-  { id: "p2", name: "Vortex Core", status: "Archived", description: "High-frequency data streaming middleware achieving < 2ms latency on global edge nodes.", contributorsCount: 8, performanceScore: "99% Performance Score" }
-];
-
-const initialNotes: Note[] = [
-  { id: "n1", title: "Review of WebGPU specs", updatedAt: "Updated 2 hours ago", status: "Draft" },
-  { id: "n2", title: "Scalability Bottleneck Analysis", updatedAt: "Updated Yesterday", status: "Shared with Engineering" }
-];
-
-const initialActivities: ProfileActivity[] = [
-  { id: "a1", type: "push", text: "Pushed 4 commits to Aether-Core/main", time: "12 minutes ago", color: "bg-blue-500" },
-  { id: "a2", type: "endorse", text: "Endorsed Sarah Chen for System Design", time: "4 hours ago", color: "bg-green-500" },
-  { id: "a3", type: "publish", text: "Published article 'The Future of Edge Computing'", time: "2 days ago", color: "bg-[#00E5FF]" }
-];
-
 const AVAILABLE_SKILLS = [
   "System Architecture", "Three.js / WebGL", "Go Microservices",
   "UI/UX Vision", "Product Strategy", "React / TypeScript",
   "Node.js", "Kubernetes", "GraphQL", "Rust", "Python",
   "Machine Learning", "DevOps", "PostgreSQL", "Redis"
-];
-
-const TOP_CONNECTIONS = [
-  { name: "Sarah Chen", role: "Lead Frontend Designer", avatar: SARAH_CHEN_AVATAR, interaction: 47 },
-  { name: "Marcus Thorne", role: "Cloud Infrastructure Lead", avatar: MARCUS_AVATAR, interaction: 34 },
-  { name: "Elena Rodriguez", role: "Product Manager", avatar: PORTFOLIO_5, interaction: 28 },
-];
-
-const RECENT_INTERACTIONS = [
-  { user: "Sarah Chen", action: "commented on Project Aether design review", time: "12m ago", type: "comment" },
-  { user: "Marcus Thorne", action: "shared a deployment report in Engineering", time: "1h ago", type: "share" },
-  { user: "Elena Rodriguez", action: "assigned you to Sprint Review task", time: "3h ago", type: "task" },
-  { user: "Jordan Smith", action: "approved your merge request in Vortex-Core", time: "5h ago", type: "approve" },
 ];
 
 function Sparkline({ data, color = "#00E5FF", height = 40 }: { data: number[]; color?: string; height?: number }) {
@@ -101,29 +62,29 @@ export default function ProfileView() {
   const isAdvanced = currentUserRole === "admin" || currentUserRole === "coordinator";
   const [profile, setProfile] = useState({
     id: currentUserId,
-    name: "Alex Rivera",
-    title: "Principal Systems Architect & Creative Technologist",
-    location: "Palo Alto, California",
-    bio: "Crafting high-performance digital ecosystems at the intersection of architecture and human experience. 10+ years of experience scaling distributed systems and leading multidisciplinary design teams at Nexus. Passionate about WebGL, generative AI, and sustainable infrastructure.",
-    email: "alex@nexus.local",
-    website: "https://alexrivera.dev",
-    experienceLevel: "Senior",
-    role: "coordinator",
+    name: "",
+    title: "",
+    location: "",
+    bio: "",
+    email: "",
+    website: "",
+    avatar: "",
+    coverPic: "",
+    experienceLevel: "Junior",
+    role: currentUserRole,
     status: "online",
-    availableForCollab: true,
-    skills: ["System Architecture", "Three.js / WebGL", "Go Microservices", "UI/UX Vision", "Product Strategy"],
+    availableForCollab: false,
+    skills: [] as string[],
   });
-  const [emailVerified] = useState(true);
-  const [activityData] = useState([12, 18, 8, 22, 14, 28, 20, 32, 24, 40, 36, 44, 38, 48]);
-  const [collabScore] = useState(87);
-  const [activeSessions] = useState(2);
+  const [emailVerified] = useState(false);
+  const [activeSessions] = useState(1);
 
   const networkStats = useMemo(() => ({
-    connections: 128,
-    messagesSent: 1452,
-    activeConversations: 8,
-    activityLevel: activityData.reduce((a, b) => a + b, 0) > 200 ? "High" : activityData.reduce((a, b) => a + b, 0) > 100 ? "Medium" : "Low" as string,
-  }), [activityData]);
+    connections: 0,
+    messagesSent: 0,
+    activeConversations: 0,
+    activityLevel: "Low" as string,
+  }), []);
 
   const [editForm, setEditForm] = useState({ ...profile });
   const [isEditing, setIsEditing] = useState(false);
@@ -155,7 +116,27 @@ export default function ProfileView() {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem("user_token");
+    const uid = localStorage.getItem("user_id");
     if (isOwnProfile) {
+      api(`/users/${uid}`).then(r => r.ok ? r.json() : null).then(d => {
+        if (d) {
+          setProfile(prev => ({
+            ...prev,
+            id: d.id,
+            name: d.name || prev.name,
+            title: d.title || prev.title,
+            location: d.location || prev.location,
+            bio: d.bio || prev.bio,
+            email: d.email || prev.email,
+            website: d.website || prev.website,
+            role: d.role || prev.role,
+            status: d.status === "active" ? "online" : "offline",
+            avatar: d.avatar || "",
+            coverPic: d.coverPic || "",
+          }));
+        }
+      });
       api("/projects").then(r => r.ok ? r.json() : []).then(d => { setProjects(d); setLoadingProjects(false); }).catch(() => setLoadingProjects(false));
       api("/notes").then(r => r.ok ? r.json() : []).then(d => { setNotes(d); setLoadingNotes(false); }).catch(() => setLoadingNotes(false));
     } else {
@@ -173,6 +154,8 @@ export default function ProfileView() {
             website: d.website || prev.website,
             role: d.role || prev.role,
             status: d.status === "active" ? "online" : "offline",
+            avatar: d.avatar || "",
+            coverPic: d.coverPic || "",
           }));
         }
         setLoadingNotes(false);
@@ -200,11 +183,30 @@ export default function ProfileView() {
     setErrors(e); return Object.keys(e).length === 0;
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setProfile({ ...editForm }); setIsEditing(false);
-    setSuccessMsg("Profile updated successfully!");
+    const token = localStorage.getItem("user_token");
+    const userId = localStorage.getItem("user_id");
+    if (!token || !userId) return;
+    try {
+      const res = await fetch(`/api/users/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(editForm),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setProfile(prev => ({ ...prev, ...updated }));
+        setIsEditing(false);
+        setSuccessMsg("Profile updated successfully!");
+      } else {
+        const err = await res.json();
+        setErrors({ form: err.error || "Failed to update profile" });
+      }
+    } catch {
+      setErrors({ form: "Network error" });
+    }
     setTimeout(() => setSuccessMsg(""), 3000);
   };
 
@@ -224,9 +226,30 @@ export default function ProfileView() {
   const removeSkill = (s: string) => setEditForm(prev => ({ ...prev, skills: prev.skills.filter(x => x !== s) }));
   const filteredSkillSuggestions = AVAILABLE_SKILLS.filter(s => s.toLowerCase().includes(skillInput.toLowerCase()) && !editForm.skills.includes(s));
   const handleLogoutAll = () => { localStorage.removeItem("user_token"); localStorage.removeItem("user_role"); localStorage.removeItem("current_tab"); window.location.href = "/login"; };
-  const handlePicUpload = (type: "profile" | "cover") => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePicUpload = (type: "profile" | "cover") => async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) { const reader = new FileReader(); reader.onloadend = () => { if (type === "profile") setProfilePicPreview(reader.result as string); else setCoverPicPreview(reader.result as string); }; reader.readAsDataURL(file); }
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => { if (type === "profile") setProfilePicPreview(reader.result as string); else setCoverPicPreview(reader.result as string); };
+    reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    const token = localStorage.getItem("user_token");
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok && data.file?.url) {
+        if (type === "profile") {
+          setEditForm(p => ({ ...p, avatar: data.file.url }));
+        } else {
+          setEditForm(p => ({ ...p, coverPic: data.file.url }));
+        }
+      }
+    } catch { /* preview already set */ }
   };
   const toggleFollow = (id: string) => setFollowedState(prev => ({ ...prev, [id]: !prev[id] }));
 
@@ -248,7 +271,7 @@ export default function ProfileView() {
       {/* ─── Banner & Profile Header ─── */}
       <div className="relative">
         <div className="h-56 md:h-72 w-full overflow-hidden relative group">
-          <NexusImage src={coverPicPreview || COVER_BANNER} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <NexusImage src={coverPicPreview || profile.coverPic || ""} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/80 to-transparent" />
         </div>
 
@@ -258,7 +281,7 @@ export default function ProfileView() {
             <div className="relative shrink-0">
               <div className="absolute inset-0 rounded-2xl bg-[#00E5FF] blur-xl opacity-30 animate-pulse" />
               <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-2xl border-2 border-[#00E5FF]/40 bg-[#1E293B] overflow-hidden shadow-2xl shadow-[#00E5FF]/10">
-                <NexusImage src={profilePicPreview || PROFILE_AVATAR} alt="" className="w-full h-full object-cover" />
+                <NexusImage src={profilePicPreview || profile.avatar || ""} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
 
@@ -312,7 +335,7 @@ export default function ProfileView() {
               className="bg-[#111827]/80 backdrop-blur-md rounded-2xl border border-[#1E293B] shadow-md overflow-hidden">
               <div className="px-5 pt-5 pb-4 border-b border-[#1E293B] flex items-center justify-between">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" /> Network Stats</h3>
-                <CollaborationScore score={collabScore} />
+                <CollaborationScore score={0} />
               </div>
               <div className="p-5 space-y-4">
                 <div className="grid grid-cols-2 gap-3">
@@ -335,7 +358,7 @@ export default function ProfileView() {
                 </div>
                 <div className="bg-[#0F172A] rounded-xl p-3 pt-5 border border-[#1E293B]">
                   <p className="text-[9px] text-[#475569] uppercase tracking-wider font-bold mb-2">14-Day Activity</p>
-                  <Sparkline data={activityData} />
+                  <Sparkline data={[]} />
                 </div>
               </div>
             </motion.div>
@@ -414,67 +437,9 @@ export default function ProfileView() {
               className="bg-[#111827]/80 backdrop-blur-md rounded-2xl border border-[#1E293B] shadow-md">
               <div className="px-5 py-4 border-b border-[#1E293B] flex items-center justify-between">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Relationship Insights</h3>
-                <span className="text-[9px] text-[#475569]">Last active 12m ago</span>
               </div>
               <div className="p-5 space-y-5">
-                {/* Top 3 Connections */}
-                <div>
-                  <p className="text-[9px] text-[#475569] uppercase tracking-wider font-bold mb-3">Most Interacted</p>
-                  <div className="flex items-center gap-4">
-                    {TOP_CONNECTIONS.map((c, i) => (
-                      <div key={c.name} className="flex items-center gap-3 bg-[#0F172A] rounded-xl pl-2 pr-3 py-2 border border-[#1E293B] flex-1 min-w-0">
-                        <div className="relative">
-                          <div className="w-9 h-9 rounded-full overflow-hidden bg-[#1E293B] border border-[#1E293B]">
-                            <NexusImage src={c.avatar} alt={c.name} />
-                          </div>
-                          <div className={`absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${i === 0 ? "bg-[#00E5FF] text-[#0F172A]" : i === 1 ? "bg-purple-500 text-white" : "bg-[#64748B] text-white"}`}>
-                            {i + 1}
-                          </div>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-xs font-bold text-[#F8FAFC] truncate">{c.name}</p>
-                          <p className="text-[9px] text-[#64748B]">{c.interaction} interactions</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Most Active Group */}
-                <div className="bg-[#0F172A] rounded-xl p-3.5 border border-[#1E293B]">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center">
-                        <Hash className="w-4 h-4 text-[#00E5FF]" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-[#F8FAFC]">Most Active Group</p>
-                        <p className="text-[10px] text-[#64748B]">Engineering · 204 messages this week</p>
-                      </div>
-                    </div>
-                    <span className="text-[9px] text-green-400 font-bold flex items-center gap-1"><Wifi className="w-3 h-3" /> Active now</span>
-                  </div>
-                </div>
-
-                {/* Recent Interactions */}
-                <div>
-                  <p className="text-[9px] text-[#475569] uppercase tracking-wider font-bold mb-3">Recent Interactions</p>
-                  <div className="space-y-1">
-                    {RECENT_INTERACTIONS.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-[#0F172A]/50 transition-colors">
-                        <div className="w-7 h-7 rounded-full overflow-hidden bg-[#1E293B] border border-[#1E293B] shrink-0 mt-0.5">
-                          <NexusImage src={[SARAH_CHEN_AVATAR, MARCUS_AVATAR, PORTFOLIO_5, PORTFOLIO_4][i]} alt={item.user} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[11px] text-[#cbd5e1]">
-                            <span className="font-bold text-[#F8FAFC]">{item.user}</span> {item.action}
-                          </p>
-                          <p className="text-[9px] text-[#475569] mt-0.5">{item.time}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-xs text-[#475569] text-center py-4">No relationship data yet. Start collaborating to build your network.</p>
               </div>
             </motion.div>
           )}
@@ -494,7 +459,7 @@ export default function ProfileView() {
                 {projects.slice(0, 3).map((proj, i) => (
                   <div key={proj.id} onClick={() => router.push(`/dashboard/projects/${proj.id}`)}
                     className="h-36 rounded-xl overflow-hidden group relative border border-[#1E293B] cursor-pointer hover:shadow-lg hover:shadow-[#00E5FF]/10 transition-all duration-300">
-                    <NexusImage src={proj.image || [PORTFOLIO_1, PORTFOLIO_2, PORTFOLIO_3][i] || PORTFOLIO_1} alt={proj.name} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
+                    <NexusImage src={proj.image || ""} alt={proj.name} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
                     <div className="absolute inset-0 bg-[#00E5FF]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Eye className="text-[#F8FAFC] w-5 h-5" />
                     </div>
@@ -572,38 +537,13 @@ export default function ProfileView() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                 className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF]">Recent Activity</h3>
-                <div className="border-l-2 border-[#1E293B] ml-1.5 pl-4 space-y-4 relative mt-4">
-                  {initialActivities.map(act => (
-                    <div key={act.id} className="relative">
-                      <div className={`absolute -left-[22px] top-1 w-2 h-2 rounded-full ${act.color} ring-4 ring-[#0f0f0f]`} />
-                      <p className="text-[11px] text-[#cbd5e1] font-medium leading-normal">{act.text}</p>
-                      <p className="text-[9px] text-[#94A3B8] mt-0.5 font-medium">{act.time}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs text-[#475569] text-center py-8 mt-2">No recent activity.</p>
               </motion.div>
             ) : (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                 className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Bell className="w-3.5 h-3.5" /> Notifications</h3>
-                <div className="mt-4 space-y-2">
-                  {[
-                    { title: "Welcome to Nexus!", desc: "Your account has been created successfully.", time: "1d ago" },
-                    { title: "Profile updated", desc: "Your profile information was updated.", time: "3d ago" },
-                    { title: "New feature available", desc: "Check out the new private messaging system.", time: "5d ago" },
-                  ].map((n, i) => (
-                    <div key={i} className="flex gap-3 p-3 rounded-xl bg-[#1E293B] border border-[#1E293B]">
-                      <div className="w-7 h-7 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center shrink-0">
-                        <Bell className="w-3.5 h-3.5 text-[#00E5FF]" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[11px] font-bold text-[#F8FAFC]">{n.title}</p>
-                        <p className="text-[10px] text-[#94A3B8] mt-0.5">{n.desc}</p>
-                        <p className="text-[9px] text-[#475569] mt-1">{n.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs text-[#475569] text-center py-8 mt-2">No notifications yet.</p>
               </motion.div>
             )}
           </div>
@@ -641,7 +581,7 @@ export default function ProfileView() {
                       <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Profile Picture</label>
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#1E293B] border border-[#1E293B] relative group">
-                          <NexusImage src={profilePicPreview || PROFILE_AVATAR} alt="" className="w-full h-full object-cover" />
+                          <NexusImage src={profilePicPreview || profile.avatar || ""} alt="" className="w-full h-full object-cover" />
                           <label className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                             <Camera className="w-5 h-5 text-[#F8FAFC]" />
                             <input type="file" accept="image/*" onChange={handlePicUpload("profile")} className="hidden" />
@@ -658,7 +598,7 @@ export default function ProfileView() {
                       <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Cover Image (optional)</label>
                       <div className="flex items-center gap-4">
                         <div className="w-32 h-16 rounded-xl overflow-hidden bg-[#1E293B] border border-[#1E293B]">
-                          <NexusImage src={coverPicPreview || COVER_BANNER} alt="" className="w-full h-full object-cover" />
+                          <NexusImage src={coverPicPreview || profile.coverPic || ""} alt="" className="w-full h-full object-cover" />
                         </div>
                         <label className="px-4 h-9 bg-[#1E293B] border border-[#1E293B] rounded-xl text-[10px] font-bold text-[#94A3B8] hover:text-[#F8FAFC] flex items-center gap-2 cursor-pointer transition-all">
                           <Camera className="w-3.5 h-3.5" /> Upload Cover

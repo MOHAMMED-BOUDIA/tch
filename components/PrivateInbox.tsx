@@ -38,8 +38,8 @@ function formatTime(dateStr: string): string {
 }
 
 export default function PrivateInbox() {
-  const token = localStorage.getItem("user_token") || "";
-  const currentUserId = localStorage.getItem("user_id") || "";
+  const [token, setToken] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
@@ -52,6 +52,11 @@ export default function PrivateInbox() {
 
   const threadEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setToken(localStorage.getItem("user_token") || "");
+    setCurrentUserId(localStorage.getItem("user_id") || "");
+  }, []);
 
   const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 

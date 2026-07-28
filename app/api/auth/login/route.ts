@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDb } from "@/lib/db";
 import User from "@/lib/models/User";
@@ -44,10 +44,13 @@ export async function POST(req: NextRequest) {
     const token = generateToken({ userId: user._id.toString(), role: user.role });
     log("Login success", { userId: user._id.toString() });
 
-    return jsonResponse({
+    const body = {
       token,
       user: { id: user._id, username: user.username, email: user.email, name: user.name, role: user.role },
-    });
+    };
+    const res = NextResponse.json(body);
+    res.cookies.set("token", token, { path: "/", maxAge: 86400, sameSite: "lax" });
+    return res;
   } catch (err) {
     log("Unexpected error", err instanceof Error ? err.message : err);
     return errorResponse(err);

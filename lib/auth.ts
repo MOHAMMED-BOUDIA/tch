@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 import User from "./models/User";
 
-const JWT_SECRET = process.env.JWT_SECRET || "nexus-admin-secret-key-change-in-production";
+const JWT_SECRET: string = process.env.JWT_SECRET || (() => { throw new Error("JWT_SECRET environment variable is required"); })();
 
 export type UserRole = "user" | "coordinator" | "admin" | "bot";
 

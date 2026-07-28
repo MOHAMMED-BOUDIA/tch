@@ -30,17 +30,18 @@ function generateSparkline(): string {
   return pts.map((v, i) => `${i * 7},${24 - v}`).join(" ");
 }
 
-function layoutNodes(names: string[]): GraphNode[] {
+function layoutNodes(nodes: { id: number; name: string; role: string; userId: string }[]): GraphNode[] {
   const centerX = 600;
   const centerY = 450;
   const radius = 280;
-  return names.map((name, i) => {
-    const angle = (2 * Math.PI * i) / names.length - Math.PI / 2;
+  return nodes.map((n, i) => {
+    const angle = (2 * Math.PI * i) / nodes.length - Math.PI / 2;
     return {
-      id: i + 1,
-      name,
-      role: name === "Nexus Assistant" ? "AI Assistant" : "coordinateur",
-      avatar: `https://i.pravatar.cc/80?u=${name.toLowerCase().replace(/\s+/g, ".")}@nexus.local`,
+      id: n.id,
+      userId: n.userId,
+      name: n.name,
+      role: n.role || (n.name === "Nexus Assistant" ? "AI Assistant" : "coordinateur"),
+      avatar: `https://i.pravatar.cc/80?u=${n.name.toLowerCase().replace(/\s+/g, ".")}@nexus.local`,
       status: "online" as const,
       x: Math.round(centerX + radius * Math.cos(angle)),
       y: Math.round(centerY + radius * Math.sin(angle)),
@@ -59,7 +60,7 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
   opacity: 0.1 + Math.random() * 0.2,
 }));
 
-export default function GraphView({ searchQuery = "", onMessageUser, onViewProfile, viewMode = "graph" }: { searchQuery?: string; onMessageUser?: (node: GraphNode) => void; onViewProfile?: (node: GraphNode) => void; viewMode?: "graph" | "list" }) {
+export default function GraphView({ searchQuery = "", onMessageUser, onViewProfile, viewMode = "graph", readOnly = false }: { searchQuery?: string; onMessageUser?: (node: GraphNode) => void; onViewProfile?: (node: GraphNode) => void; viewMode?: "graph" | "list"; readOnly?: boolean }) {
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [connections, setConnections] = useState<GraphConnection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,9 +74,8 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
         if (!r.ok) throw new Error("Failed to load graph");
         return r.json();
       })
-      .then((data: { nodes: { id: number; name: string; role: string }[]; connections: GraphConnection[] }) => {
-        const names = data.nodes.map((n) => n.name);
-        const laid = layoutNodes(names);
+      .then((data: { nodes: { id: number; name: string; role: string; userId: string }[]; connections: GraphConnection[] }) => {
+        const laid = layoutNodes(data.nodes);
         setNodes(laid);
         setConnections(data.connections);
         setLoading(false);
@@ -189,6 +189,7 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
   };
 
   const handleNodeMouseDown = (e: React.MouseEvent, node: GraphNode) => {
+    if (readOnly) return;
     e.stopPropagation();
     setDraggingNodeId(node.id);
     setActiveNode(node);
@@ -340,7 +341,7 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
             return (
               <motion.div
                 key={node.id}
-                className="node-card absolute flex flex-col items-center cursor-grab active:cursor-grabbing z-10"
+                className={`node-card absolute flex flex-col items-center z-10 ${readOnly ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"}`}
                 style={{ left: node.x, top: node.y, opacity: nodeOpacity }}
                 animate={{ scale: isHovered ? 1.08 : isActive ? 1.04 : 1 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}

@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDb } from "@/lib/db";
 import User from "@/lib/models/User";
+import Notification from "@/lib/models/Notification";
 import { generateToken, errorResponse, jsonResponse } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
     }
     const hashed = bcrypt.hashSync(password, 10);
     const user = await User.create({ username, email, password: hashed, role: "user", status: "active", name: name || username });
+    await Notification.create({ userId: user._id, title: "Welcome to Nexus!", description: "Your account has been created successfully.", type: "success" });
     const token = generateToken({ userId: user._id.toString(), role: user.role });
     return jsonResponse({
       token,

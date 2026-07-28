@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Globe, MessageSquare, Layers, BarChart, Settings, LogOut, Bolt,
-  Plus, CheckSquare, Search, Bell, ChevronDown, Shield,
-  TrendingUp, Users, Activity, ChevronRight, User, Briefcase
+  Search, Bell, ChevronDown, Shield,
+  ChevronRight, User, Briefcase
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
-const USER_AVATAR = "https://lh3.googleusercontent.com/aida-public/AB6AXuB2rOqwpJ0X-_ADZIqWKW0SfxKxR3beTpohMe5_GJBLmF6LQz9iYdZSSxl3pMK5iSCJtJuKpQnGX_I38W1DalIvKPoUZQ-A98tASJVFrk0sURvOUtL5qhl4PZv4pcVzuXub9lFCtik2DBYjaI0NomahIFvK7mTnOgvGtg-H4uNHSaE8GyBYGjCpTzAzxp4OVeZEAvW2cEeo7os3niKA8I1G-sZAj3CsGUC99sAYSudazHFCnGokLan0mVd1Bp0OTennuiApZ-f3fFhb";
+const USER_AVATAR = "";
 
 type Tab = "network" | "messages" | "projects" | "analytics" | "settings" | "admin" | "profile" | "portfolio";
 
 const TAB_LABELS: Record<Tab, string> = {
   network: "Network", messages: "Messages", projects: "Projects",
   analytics: "Analytics", settings: "Settings", admin: "Admin",
-  profile: "Profile", portfolio: "Project",
+  profile: "Profile", portfolio: "Projects",
 };
 
 const TAB_ICONS: Record<Tab, typeof Globe> = {
@@ -27,9 +27,9 @@ const TAB_ICONS: Record<Tab, typeof Globe> = {
 };
 
 const roleTabs: Record<string, Tab[]> = {
-  user: ["messages", "network", "portfolio", "settings"],
-  coordinator: ["network", "messages", "projects", "analytics", "settings"],
-  admin: ["network", "messages", "projects", "analytics", "settings", "admin"],
+  user: ["network", "messages", "projects", "portfolio", "settings"],
+  coordinator: ["network", "messages", "projects", "portfolio", "analytics", "settings"],
+  admin: ["network", "messages", "projects", "portfolio", "analytics", "settings", "admin"],
 };
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -42,8 +42,50 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  const currentTab = (sidebarTabs.includes(pathname.split("/").pop() as Tab) ? pathname.split("/").pop() : sidebarTabs[0]) as Tab;
+  const fetchNotifications = useCallback(async () => {
+    const token = localStorage.getItem("user_token");
+    if (!token) return;
+    try {
+      const res = await fetch("/api/notifications", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data);
+        setUnreadCount(data.filter((n: any) => !n.read).length);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  const markAllRead = async () => {
+    const unreadIds = notifications.filter((n) => !n.read).map((n) => n._id);
+    if (!unreadIds.length) return;
+    const token = localStorage.getItem("user_token");
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: unreadIds }),
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch {}
+  };
+
+  useEffect(() => {
+    if (showNotifications && unreadCount > 0) {
+      markAllRead();
+    }
+  }, [showNotifications]);
+
+  const currentTab = (sidebarTabs.find(t => pathname.includes(`/dashboard/${t}`)) || sidebarTabs[0]) as Tab;
 
   const persistTab = (tab: Tab) => {
     router.push(`/dashboard/${tab}`);
@@ -129,7 +171,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="relative">
               <button onClick={() => setShowNotifications(p => !p)} className="relative w-8 h-8 flex items-center justify-center rounded-lg text-[#475569] hover:bg-[#1E293B] hover:text-[#94A3B8] transition-all duration-200 cursor-pointer">
                 <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#00E5FF] shadow-[0_0_6px_rgba(0,229,255,0.6)]" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#00E5FF] text-[#0F172A] text-[8px] font-bold flex items-center justify-center shadow-[0_0_6px_rgba(0,229,255,0.6)]">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
               </button>
             </div>
             <div className="flex items-center gap-2 px-2.5 py-1 bg-[#0F172A] rounded-lg border border-[#1E293B]">
@@ -138,8 +184,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="relative">
               <button onClick={() => setShowUserMenu(p => !p)} className="flex items-center gap-2 pl-2.5 border-l border-[#1E293B] group cursor-pointer">
-                <div className="relative w-7 h-7 rounded-full overflow-hidden bg-[#1E293B] border border-[#1E293B]">
-                  <img src={USER_AVATAR} alt="" className="w-full h-full object-cover" loading="lazy" />
+                <div className="relative w-7 h-7 rounded-full overflow-hidden bg-[#1E293B] border border-[#1E293B] flex items-center justify-center">
+                  {USER_AVATAR ? <img src={USER_AVATAR} alt="" className="w-full h-full object-cover" loading="lazy" /> : <User className="w-4 h-4 text-[#64748B]" />}
                 </div>
                 <ChevronDown className="w-3 h-3 text-[#475569] group-hover:text-[#94A3B8] transition-colors" />
               </button>
@@ -167,25 +213,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <>
           <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)} />
           <div className="fixed top-14 right-5 mt-2 w-72 bg-[#111827] border border-[#1E293B] rounded-2xl shadow-2xl z-50 overflow-hidden">
-            <div className="p-4 border-b border-[#1E293B]">
+            <div className="p-4 border-b border-[#1E293B] flex items-center justify-between">
               <p className="text-xs font-bold text-[#F8FAFC]">Notifications</p>
+              {unreadCount > 0 && <span className="text-[9px] text-[#00E5FF] font-bold">{unreadCount} new</span>}
             </div>
-            <div className="p-4 space-y-3">
-              {[{ title: "New message from Alex", desc: "Hey, check the latest deployment build.", time: "2m ago" },
-                { title: "Project milestone completed", desc: "Q3 rollout reached 100% completion.", time: "1h ago" },
-                { title: "System alert resolved", desc: "Latency spike on us-east-1 returned to normal.", time: "3h ago" },
-              ].map((n, i) => (
-                <div key={i} className="flex gap-3 p-2 rounded-xl hover:bg-[#0F172A] transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Bell className="w-3.5 h-3.5 text-[#00E5FF]" />
+            <div className="p-4 space-y-3 max-h-80 overflow-y-auto custom-scrollbar">
+              {notifications.length === 0 ? (
+                <p className="text-[11px] text-[#475569] text-center py-4">No notifications yet.</p>
+              ) : (
+                notifications.map((n) => (
+                  <div key={n._id} className={`flex gap-3 p-2 rounded-xl hover:bg-[#0F172A] transition-colors ${!n.read ? "bg-[#0F172A]/50" : ""}`}>
+                    <div className="w-8 h-8 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <Bell className="w-3.5 h-3.5 text-[#00E5FF]" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold text-[#F8FAFC] truncate">{n.title}</p>
+                      {n.description && <p className="text-[10px] text-[#94A3B8] mt-0.5 line-clamp-2">{n.description}</p>}
+                      <p className="text-[9px] text-[#475569] mt-1">{new Date(n.createdAt).toLocaleDateString()}</p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[11px] font-bold text-[#F8FAFC] truncate">{n.title}</p>
-                    <p className="text-[10px] text-[#94A3B8] mt-0.5 line-clamp-2">{n.desc}</p>
-                    <p className="text-[9px] text-[#475569] mt-1">{n.time}</p>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </>
@@ -196,8 +244,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
           <div className="fixed top-14 right-5 mt-2 w-48 bg-[#111827] border border-[#1E293B] rounded-2xl shadow-2xl z-50 overflow-hidden">
             <div className="p-3 border-b border-[#1E293B]">
-              <p className="text-xs font-bold text-[#F8FAFC]">Alex Rivera</p>
-              <p className="text-[9px] text-[#94A3B8]">alex@nexus.local</p>
+              <p className="text-xs font-bold text-[#F8FAFC]">User</p>
+              <p className="text-[9px] text-[#94A3B8]">Signed in</p>
             </div>
             <div className="p-2 space-y-0.5">
               <button onClick={() => { persistTab("settings"); setShowUserMenu(false); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[11px] text-[#cbd5e1] hover:bg-[#0F172A] hover:text-[#F8FAFC] transition-all cursor-pointer">

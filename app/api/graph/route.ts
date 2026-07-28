@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
 
     const nodes = senders.map((s, i) => ({
       id: i + 1,
+      userId: s._id.toString(),
       name: s.name,
       role: s.name === "Nexus Assistant" ? "AI Assistant" : "coordinator",
       avatar: "",

@@ -19,6 +19,41 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
 });
 
+function getCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function parseJwtPayload(token: string): Record<string, unknown> | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    return JSON.parse(atob(parts[1]));
+  } catch {
+    return null;
+  }
+}
+
+function syncAuthFromCookies(): { token: string | null; role: string | null; userId: string | null } {
+  const cookieToken = getCookie("token");
+  if (cookieToken) {
+    const payload = parseJwtPayload(cookieToken);
+    if (payload && payload.userId && payload.role) {
+      const uid = String(payload.userId);
+      const rol = String(payload.role);
+      localStorage.setItem("user_token", cookieToken);
+      localStorage.setItem("user_role", rol);
+      localStorage.setItem("user_id", uid);
+      return { token: cookieToken, role: rol, userId: uid };
+    }
+  }
+  const t = localStorage.getItem("user_token");
+  const r = localStorage.getItem("user_role");
+  const u = localStorage.getItem("user_id");
+  return { token: t, role: r, userId: u };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
@@ -27,9 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    setToken(localStorage.getItem("user_token"));
-    setRole(localStorage.getItem("user_role"));
-    setUserId(localStorage.getItem("user_id"));
+    const { token: t, role: r, userId: u } = syncAuthFromCookies();
+    setToken(t);
+    setRole(r);
+    setUserId(u);
     setReady(true);
   }, []);
 
@@ -38,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("user_role");
     localStorage.removeItem("user_id");
     localStorage.removeItem("current_tab");
+    document.cookie = "token=; path=/; max-age=0";
     setToken(null);
     setRole(null);
     setUserId(null);

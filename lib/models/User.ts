@@ -12,6 +12,7 @@ export interface IUser extends Document {
   location?: string;
   website?: string;
   avatar?: string;
+  coverPic?: string;
   lastLogin?: Date;
   createdAt: Date;
 }
@@ -29,6 +30,7 @@ const UserSchema = new Schema(
     location: { type: String, default: "" },
     website: { type: String, default: "" },
     avatar: { type: String },
+    coverPic: { type: String },
     lastLogin: { type: Date },
   },
   { timestamps: true }

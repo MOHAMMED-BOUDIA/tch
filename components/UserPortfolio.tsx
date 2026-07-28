@@ -9,13 +9,17 @@ const API = API_URL;
 
 export default function UserPortfolio() {
   const router = useRouter();
-  const token = localStorage.getItem("user_token") || "";
+  const [token, setToken] = useState("");
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", description: "", link: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("user_token") || "");
+  }, []);
 
   const fetchProjects = async () => {
     try {
@@ -27,7 +31,7 @@ export default function UserPortfolio() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchProjects(); }, []);
+  useEffect(() => { if (token) fetchProjects(); }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
