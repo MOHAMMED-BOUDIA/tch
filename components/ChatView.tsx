@@ -55,7 +55,7 @@ const AVATARS = [
 ];
 
 const COLORS = [
-  "from-[#00E5FF] to-[#3B82F6]",
+  "from-primary to-primary",
   "from-emerald-400 to-emerald-600",
   "from-violet-400 to-violet-600",
   "from-amber-400 to-amber-600",
@@ -167,7 +167,7 @@ export default function ChatView() {
 
     const s = io(SOCKET_URL, { auth: { token } });
 
-    s.on("connect", () => setConnected(true));
+    s.on("connect", () => { setConnected(true); s.emit("groups:list"); });
     s.on("disconnect", () => setConnected(false));
     s.on("connect_error", () => {});
 
@@ -378,48 +378,48 @@ export default function ChatView() {
       <button
         key={group.id}
         onClick={() => setActiveGroup(group.id)}
-        className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all duration-200 text-left cursor-pointer relative ${
+        className={`w-full flex items-center gap-3 p-2.5 rounded-sm transition-all duration-200 text-left cursor-pointer relative ${
           active
-            ? "bg-[#1E293B] border border-[#00E5FF]/25 shadow-[0_0_16px_rgba(0,229,255,0.06)]"
-            : "hover:bg-[#1E293B]/50 border border-transparent"
+            ? "bg-primary/10 border border-primary/30"
+            : "hover:bg-surface-tile-3/70 border border-transparent"
         }`}
       >
         <div className="relative shrink-0">
           {isDM ? (
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-[#111827] border border-[#1E293B] shadow-sm">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-tile-3 border border-white/10">
               <img src={avatarUrl!} alt="" className="w-full h-full object-cover" loading="lazy" />
             </div>
           ) : (
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${groupColors[group.id]} shadow-lg`}>
+            <div className={`w-10 h-10 rounded-sm flex items-center justify-center bg-gradient-to-br ${groupColors[group.id]}`}>
               <Hash className="w-4 h-4 text-white" />
             </div>
           )}
           {isDM && (
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#111827] bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-surface-tile-2 bg-green-500" />
           )}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-xs font-bold text-[#F8FAFC] truncate">
+            <p className="caption font-semibold text-body-on-dark truncate">
               {isDM ? displayName : group.title}
             </p>
             {lastMsg && (
-              <span className="text-[9px] text-[#475569] shrink-0">{timeAgo(lastMsg.created_at)}</span>
+              <span className="fine-print text-body-muted shrink-0">{timeAgo(lastMsg.created_at)}</span>
             )}
           </div>
           <div className="flex items-center justify-between mt-0.5">
-            <p className="text-[10px] text-[#64748B] truncate flex-1 min-w-0">
+            <p className="fine-print text-ink-muted-48 truncate flex-1 min-w-0">
               {lastMsg ? (
                 <span>
-                  <span className="text-[#94A3B8]">{lastMsg.senderName.split(" ")[0]}: </span>
+                  <span className="text-ink-muted-48">{lastMsg.senderName.split(" ")[0]}: </span>
                   {lastMsg.content}
                 </span>
               ) : (
-                <span className="italic">No messages yet</span>
+                <span className="italic text-ink-muted-48">No messages yet</span>
               )}
             </p>
             {unread > 0 && (
-              <span className="shrink-0 ml-2 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-[#00E5FF] text-[9px] font-bold text-[#0F172A] px-1 shadow-[0_0_8px_rgba(0,229,255,0.3)]">
+              <span className="shrink-0 ml-2 min-w-[20px] h-5 bg-primary text-white rounded-pill px-1.5 flex items-center justify-center fine-print font-bold">
                 {unread > 99 ? "99+" : unread}
               </span>
             )}
@@ -430,64 +430,68 @@ export default function ChatView() {
   };
 
   return (
-    <div className="flex-1 flex h-full overflow-hidden bg-[#0F172A]">
+    <div className="flex-1 flex h-full overflow-hidden bg-surface-tile-1">
       {/* ═══════════════ GROUPS SIDEBAR ═══════════════ */}
-      <section className="w-80 bg-[#111827] border-r border-[#1E293B] flex flex-col shrink-0">
-        <div className="p-4 border-b border-[#1E293B] space-y-3">
+      <section className="w-80 bg-surface-tile-2 border-r border-white/10 flex flex-col shrink-0">
+        <div className="p-4 border-b border-white/10 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Channels</h2>
+            <h2 className="fine-print font-bold uppercase tracking-widest text-body-muted">Channels</h2>
             <div className="flex items-center gap-2">
-              <span className={`relative w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`}>
-                <span className={`absolute inset-0 rounded-full animate-ping ${connected ? "bg-green-500/50" : "bg-red-500/50"}`} />
+              <span className={`inline-flex items-center gap-1.5 ${connected ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} border rounded-pill px-2.5 py-0.5 fine-print font-semibold`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${connected ? "bg-green-400" : "bg-red-400"}`} />
+                {connected ? "Connected" : "Offline"}
               </span>
-              <span className="text-[9px] text-[#94A3B8] uppercase font-semibold">{connected ? "Live" : "Offline"}</span>
             </div>
           </div>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#475569] w-3.5 h-3.5" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted-48 w-3.5 h-3.5" />
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search channels..."
-              className="w-full bg-[#0F172A] h-9 pl-9 pr-3 rounded-xl border border-[#1E293B] text-xs text-[#F8FAFC] focus:ring-1 focus:ring-[#00E5FF]/30 focus:border-[#00E5FF]/40 transition-all outline-none placeholder:text-[#475569]"
+              className="w-full bg-surface-tile-3 h-9 pl-9 pr-3 rounded-pill border border-white/10 caption text-body-on-dark focus:border-primary/40 transition-all outline-none placeholder:text-body-muted"
             />
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar py-2 space-y-0.5 px-2">
           {channels.length > 0 && (
-            <div className="px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-widest text-[#475569]">Channels</div>
+            <div className="px-2.5 py-1.5 fine-print font-bold uppercase tracking-widest text-body-muted">Channels</div>
           )}
           {channels.filter(g => g.title.toLowerCase().includes(searchQuery.toLowerCase())).map(group =>
             renderGroupItem(group, activeGroup === group.id)
           )}
           {dms.length > 0 && (
             <>
-              <div className="pt-2 mt-2 border-t border-[#1E293B]" />
-              <div className="px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-widest text-[#475569]">Direct Messages</div>
+              <div className="pt-2 mt-2 border-t border-white/10" />
+              <div className="px-2.5 py-1.5 fine-print font-bold uppercase tracking-widest text-body-muted">Direct Messages</div>
             </>
           )}
           {dms.filter(g => getDMName(g.title).toLowerCase().includes(searchQuery.toLowerCase())).map(group =>
             renderGroupItem(group, activeGroup === group.id)
           )}
           {groups.length === 0 && (
-            <p className="text-xs text-[#475569] text-center py-8">No conversations yet</p>
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-surface-tile-3 border border-white/10 flex items-center justify-center mb-3">
+                <MessageSquare className="w-5 h-5 text-body-muted" />
+              </div>
+              <p className="caption font-semibold text-body-on-dark">No conversations yet</p>
+              <p className="fine-print text-ink-muted-48 mt-1">Your channels and direct messages will appear here</p>
+            </div>
           )}
         </div>
       </section>
 
       {/* ═══════════════ CHAT AREA ═══════════════ */}
-      <section className="flex-1 flex flex-col overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A] via-[#0a1422] to-[#0F172A] pointer-events-none" />
-        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] rounded-full bg-[#00E5FF]/[0.015] blur-[150px] pointer-events-none" />
+      <section className="flex-1 flex flex-col overflow-hidden relative bg-surface-tile-1">
 
         {/* ─── Header ─── */}
-        <header className="h-16 flex items-center justify-between px-6 border-b border-[#1E293B] bg-[#111827]/90 backdrop-blur-xl z-10 shrink-0 relative">
+        <header className="h-16 flex items-center justify-between px-6 border-b border-white/10 bg-surface-tile-2/80 backdrop-blur-xl z-10 shrink-0 relative">
           {activeGroupData ? (
             <>
               <div className="flex items-center gap-3">
                 {isActiveDM ? (
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-[#111827] border border-[#1E293B] shadow-sm">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-tile-3 border border-white/10">
                     <img
                       src={`https://i.pravatar.cc/40?u=${getDMName(activeGroupData.title).toLowerCase().replace(/\s+/g, ".")}@nexus`}
                       alt=""
@@ -496,32 +500,32 @@ export default function ChatView() {
                     />
                   </div>
                 ) : (
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${groupColors[activeGroupData.id]} shadow-lg`}>
+                  <div className={`w-10 h-10 rounded-sm flex items-center justify-center bg-gradient-to-br ${groupColors[activeGroupData.id]}`}>
                     <Bolt className="w-5 h-5 text-white" />
                   </div>
                 )}
                 <div>
-                  <h2 className="text-sm font-bold text-[#F8FAFC] tracking-tight">
+                  <h2 className="body-strong text-body-on-dark tracking-tight">
                     {isActiveDM ? getDMName(activeGroupData.title) : activeGroupData.title}
                   </h2>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]" />
-                    <span className="text-[9px] text-green-400 font-semibold uppercase tracking-wide">Online</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span className="fine-print text-green-400 font-semibold">Online</span>
                     {!isActiveDM && (
                       <>
-                        <span className="text-[9px] text-[#475569]">·</span>
-                        <span className="text-[9px] text-[#94A3B8]">5 members</span>
+                        <span className="fine-print text-ink-muted-48">·</span>
+                        <span className="fine-print text-ink-muted-48">5 members</span>
                       </>
                     )}
                     {typingUsers.length > 0 && (
                       <>
-                        <span className="text-[9px] text-[#475569]">·</span>
-                        <span className="text-[9px] text-[#00E5FF] italic flex items-center gap-1">
+                        <span className="fine-print text-ink-muted-48">·</span>
+                        <span className="fine-print text-primary italic flex items-center gap-1">
                           {typingUsers.slice(0, 2).join(" & ")}{typingUsers.length > 2 ? ` +${typingUsers.length - 2}` : ""} typing
                           <span className="flex gap-0.5">
-                            <span className="w-1 h-1 rounded-full bg-[#00E5FF] animate-bounce" style={{ animationDelay: "0ms" }} />
-                            <span className="w-1 h-1 rounded-full bg-[#00E5FF] animate-bounce" style={{ animationDelay: "150ms" }} />
-                            <span className="w-1 h-1 rounded-full bg-[#00E5FF] animate-bounce" style={{ animationDelay: "300ms" }} />
+                            <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
+                            <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
+                            <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
                           </span>
                         </span>
                       </>
@@ -533,17 +537,17 @@ export default function ChatView() {
                 {!isActiveDM && (
                   <div className="flex items-center -space-x-2 mr-1">
                     {AVATARS.slice(0, 4).map((url, i) => (
-                      <div key={i} className="w-7 h-7 rounded-full border-2 border-[#111827] overflow-hidden bg-[#0F172A]">
+                      <div key={i} className="w-7 h-7 rounded-full border-2 border-surface-tile-2 overflow-hidden bg-surface-tile-3">
                         <img src={url} alt="" className="w-full h-full object-cover" loading="lazy" />
                       </div>
                     ))}
-                    <div className="w-7 h-7 rounded-full border-2 border-[#111827] bg-[#0F172A] flex items-center justify-center text-[8px] font-bold text-[#94A3B8]">
+                    <div className="w-7 h-7 rounded-full border-2 border-surface-tile-2 bg-surface-tile-3 flex items-center justify-center fine-print font-bold text-body-muted">
                       +3
                     </div>
                   </div>
                 )}
                 <div className="relative">
-                  <button onClick={() => setShowGroupSettings(p => !p)} className="w-8 h-8 rounded-lg hover:bg-[#1E293B] flex items-center justify-center text-[#475569] hover:text-[#94A3B8] transition-all cursor-pointer">
+                  <button onClick={() => setShowGroupSettings(p => !p)} className="w-8 h-8 rounded-xs hover:bg-surface-tile-3 flex items-center justify-center text-body-muted hover:text-body-on-dark transition-all duration-200 cursor-pointer">
                     <Settings className="w-4 h-4" />
                   </button>
                 </div>
@@ -551,12 +555,12 @@ export default function ChatView() {
             </>
           ) : (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#1E293B] flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-[#475569]" />
+              <div className="w-10 h-10 rounded-sm bg-surface-tile-3 flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 text-body-muted" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-[#F8FAFC]">Select a channel</h2>
-                <p className="text-[9px] text-[#475569]">Pick a conversation from the sidebar</p>
+                <h2 className="body-strong text-body-on-dark">Select a channel</h2>
+                <p className="fine-print text-body-muted">Pick a conversation from the sidebar</p>
               </div>
             </div>
           )}
@@ -564,25 +568,24 @@ export default function ChatView() {
 
         {/* ─── Messages ─── */}
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-[1]">
-          <div className="absolute inset-0 subtle-grid opacity-[0.04] pointer-events-none" />
 
           <div className="p-6 pb-2 space-y-1 max-w-4xl mx-auto relative">
             {!activeGroup ? (
               <div className="flex items-center justify-center h-[calc(100vh-16rem)]">
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-[#111827] border border-[#1E293B] flex items-center justify-center mx-auto">
-                    <MessageSquare className="w-7 h-7 text-[#475569]" />
+                  <div className="w-16 h-16 rounded-full bg-surface-tile-3 border border-white/10 flex items-center justify-center mx-auto">
+                    <MessageSquare className="w-7 h-7 text-body-muted" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-[#F8FAFC]">No channel selected</p>
-                    <p className="text-xs text-[#64748B] mt-1">Choose a channel from the sidebar to start chatting</p>
+                    <p className="body-strong text-body-on-dark">No channel selected</p>
+                    <p className="caption text-body-muted mt-1">Choose a channel from the sidebar to start chatting</p>
                   </div>
                 </div>
               </div>
             ) : activeGroupMessages.length === 0 ? (
               <div className="flex items-center justify-center h-[calc(100vh-16rem)]">
                 <div className="text-center space-y-4">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00E5FF]/10 to-[#3B82F6]/10 border border-[#00E5FF]/20 flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-surface-tile-3 border border-white/10 flex items-center justify-center mx-auto">
                     {isActiveDM ? (
                       <img
                         src={`https://i.pravatar.cc/64?u=${getDMName(activeGroupData!.title).toLowerCase().replace(/\s+/g, ".")}@nexus`}
@@ -590,12 +593,12 @@ export default function ChatView() {
                         className="w-full h-full object-cover rounded-full"
                       />
                     ) : (
-                      <MessageSquare className="w-8 h-8 text-[#00E5FF]" />
+                      <MessageSquare className="w-7 h-7 text-body-muted" />
                     )}
                   </div>
                   <div>
-                    <p className="text-base font-bold text-[#F8FAFC]">No messages yet</p>
-                    <p className="text-xs text-[#64748B] mt-1 max-w-xs mx-auto">
+                    <p className="body-strong text-body-on-dark">No messages yet</p>
+                    <p className="caption text-body-muted mt-1 max-w-xs mx-auto">
                       {isActiveDM
                         ? `Start a conversation with ${getDMName(activeGroupData!.title)}`
                         : "Start the conversation — say hello to the team!"}
@@ -603,7 +606,7 @@ export default function ChatView() {
                   </div>
                   <button
                     onClick={() => { inputRef.current?.focus(); }}
-                    className="h-9 px-5 bg-[#00E5FF]/10 hover:bg-[#00E5FF]/20 border border-[#00E5FF]/20 rounded-xl text-[11px] text-[#00E5FF] font-bold transition-all cursor-pointer"
+                    className="px-5 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-sm fine-print font-bold text-primary transition-all duration-200 cursor-pointer"
                   >
                     Write a message
                   </button>
@@ -629,7 +632,7 @@ export default function ChatView() {
                       {!isOwn && (
                         <div className="flex flex-col items-center shrink-0 w-9">
                           {isFirstInSequence && (
-                            <div className="w-9 h-9 rounded-full overflow-hidden bg-[#111827] border border-[#1E293B] shadow-sm">
+                            <div className="w-9 h-9 rounded-full overflow-hidden bg-surface-tile-3 border border-white/10">
                               <img
                                 src={`https://i.pravatar.cc/36?u=${msg.senderName.toLowerCase().replace(/\s+/g, ".")}@nexus`}
                                 alt=""
@@ -643,20 +646,25 @@ export default function ChatView() {
 
                       <div className={`flex flex-col min-w-0 max-w-full ${isOwn ? "items-end" : "items-start"}`}>
                         {/* Sender name for received (WhatsApp-style group header) */}
-                        {showHeader && !isOwn && (
-                          <div className="ml-0.5 mb-0.5">
-                            <span className="text-[11px] font-bold text-[#00E5FF]">{msg.senderName}</span>
-                          </div>
-                        )}
+                          {showHeader && !isOwn && (
+                            <div className="ml-0.5 mb-0.5">
+                              <span className="fine-print font-bold text-primary">{msg.senderName}</span>
+                            </div>
+                          )}
+                          {isOwn && showHeader && (
+                            <div className="mr-0.5 mb-0.5">
+                              <span className="fine-print font-bold text-body-muted">You</span>
+                            </div>
+                          )}
 
                         <div className="flex items-end gap-1">
                           {/* Edit/delete dropdown for own messages */}
                           {isOwn && !msg.deleted && editingMessageId !== msg.id && (
                             <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-end gap-0.5 pb-1">
-                              <button onClick={() => handleStartEdit(msg)} className="w-6 h-6 rounded-lg hover:bg-[#1E293B] flex items-center justify-center text-[#475569] hover:text-[#F8FAFC] transition-all cursor-pointer" title="Edit">
+                              <button onClick={() => handleStartEdit(msg)} className="w-6 h-6 rounded-xs hover:bg-surface-tile-3 flex items-center justify-center text-ink-muted-48 hover:text-body-on-dark transition-all duration-200 cursor-pointer" title="Edit">
                                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                               </button>
-                              <button onClick={() => setDeleteMsgId(msg.id)} className="w-6 h-6 rounded-lg hover:bg-[#1E293B] flex items-center justify-center text-[#475569] hover:text-red-400 transition-all cursor-pointer" title="Delete">
+                              <button onClick={() => setDeleteMsgId(msg.id)} className="w-6 h-6 rounded-xs hover:bg-surface-tile-3 flex items-center justify-center text-ink-muted-48 hover:text-red-400 transition-all duration-200 cursor-pointer" title="Delete">
                                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                               </button>
                             </div>
@@ -664,10 +672,10 @@ export default function ChatView() {
 
                           <div className="group relative">
                             {msg.deleted ? (
-                              <div className={`px-4 py-2.5 text-xs leading-relaxed italic ${
+                              <div className={`px-4 py-2.5 caption leading-relaxed italic ${
                                 isOwn
-                                  ? "bg-[#1E293B]/50 text-[#64748B] rounded-[7px] rounded-br-sm"
-                                  : "bg-[#1E293B]/50 text-[#64748B] rounded-[7px] rounded-bl-sm"
+                                  ? "bg-surface-tile-3/50 text-ink-muted-48 rounded-sm rounded-br-sm"
+                                  : "bg-surface-tile-3/50 text-ink-muted-48 rounded-sm rounded-bl-sm"
                               }`}>
                                 This message was deleted
                               </div>
@@ -678,37 +686,37 @@ export default function ChatView() {
                                   onChange={e => setEditText(e.target.value)}
                                   onKeyDown={handleEditKeyDown}
                                   autoFocus
-                                  className="w-full bg-[#0F172A] border border-[#00E5FF]/40 rounded-xl px-3.5 py-2.5 text-xs text-[#F8FAFC] outline-none focus:border-[#00E5FF] transition-all"
+                                  className="w-full bg-surface-tile-1 border border-primary/40 rounded-sm px-3.5 py-2.5 caption text-body-on-dark outline-none focus:border-primary transition-all"
                                 />
                                 <div className="flex items-center justify-end gap-2">
-                                  <button onClick={handleCancelEdit} className="text-[10px] text-[#64748B] hover:text-[#F8FAFC] px-3 py-1.5 rounded-lg hover:bg-[#1E293B] transition-all cursor-pointer">
+                                  <button onClick={handleCancelEdit} className="fine-print text-body-muted hover:text-body-on-dark px-3 py-1.5 rounded-xs hover:bg-surface-tile-3 transition-all duration-200 cursor-pointer">
                                     Cancel
                                   </button>
-                                  <button onClick={handleSaveEdit} className="text-[10px] font-bold text-[#0F172A] bg-[#00E5FF] hover:bg-[#3B82F6] px-3 py-1.5 rounded-lg transition-all cursor-pointer">
+                                  <button onClick={handleSaveEdit} className="fine-print font-bold text-white bg-primary hover:bg-primary px-3 py-1.5 rounded-xs transition-all duration-200 cursor-pointer">
                                     Save
                                   </button>
                                 </div>
                               </div>
                             ) : (
-                              <div className={`px-3.5 py-2 text-xs leading-relaxed whitespace-pre-wrap break-words shadow-sm ${
+                              <div className={`px-3.5 py-2 caption leading-relaxed whitespace-pre-wrap break-words ${
                                 isOwn
-                                  ? "bg-[#005C4B] text-white rounded-[7px] rounded-br-sm"
-                                  : "bg-[#202C33] text-[#E9EDEF] rounded-[7px] rounded-bl-sm"
+                                  ? "bg-primary text-white rounded-sm rounded-br-sm"
+                                  : "bg-surface-tile-3 text-body-on-dark rounded-sm rounded-bl-sm"
                               }`}>
                                 {msg.content}
                                 <span className="inline-flex items-center gap-1 ml-2 float-right leading-none mt-1">
                                   {msg.edited && (
-                                    <span className="text-[9px] opacity-50">edited</span>
+                                    <span className="fine-print opacity-60">edited</span>
                                   )}
-                                  <span className={`text-[10px] ${isOwn ? "text-white/50" : "text-[#8696A0]"}`}>
+                                  <span className={`fine-print opacity-60 ${isOwn ? "text-white" : "text-body-on-dark"}`}>
                                     {formatTime(msg.created_at)}
                                   </span>
                                   {isOwn && !msg.deleted && (
                                     <span className="flex items-center">
                                       {read ? (
-                                        <CheckCheck className="w-3.5 h-3.5 text-[#53BDEB]" />
+                                        <CheckCheck className="w-3.5 h-3.5" />
                                       ) : (
-                                        <Check className="w-3.5 h-3.5 text-white/50" />
+                                        <Check className="w-3.5 h-3.5" />
                                       )}
                                     </span>
                                   )}
@@ -719,7 +727,7 @@ export default function ChatView() {
                             {/* Edit/delete for received messages on hover */}
                             {!isOwn && !msg.deleted && editingMessageId !== msg.id && (
                               <div className="absolute -right-8 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-0.5">
-                                <button onClick={() => setDeleteMsgId(msg.id)} className="w-6 h-6 rounded-lg bg-[#1E293B] hover:bg-red-500/10 flex items-center justify-center text-[#94A3B8] hover:text-red-400 transition-all cursor-pointer" title="Delete">
+                                <button onClick={() => setDeleteMsgId(msg.id)} className="w-6 h-6 rounded-xs bg-surface-tile-3 hover:bg-red-500/10 flex items-center justify-center text-ink-muted-48 hover:text-red-400 transition-all duration-200 cursor-pointer" title="Delete">
                                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                 </button>
                               </div>
@@ -738,12 +746,12 @@ export default function ChatView() {
 
         {/* ─── Input ─── */}
         {activeGroup && (
-          <footer className="p-4 bg-gradient-to-t from-[#0F172A] via-[#0F172A] to-transparent border-t border-[#1E293B] relative z-[2]">
+          <footer className="p-4 bg-surface-tile-2 border-t border-white/10 relative z-[2]">
             <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto">
-              <div className="flex items-end gap-2 bg-[#111827] border border-[#1E293B] rounded-2xl p-2 transition-all duration-200 focus-within:border-[#00E5FF]/40 focus-within:shadow-[0_0_20px_rgba(0,229,255,0.08)]">
+              <div className="flex items-end gap-2 bg-surface-tile-3 border border-white/10 rounded-sm p-2 transition-all duration-200 focus-within:border-primary/40">
                 <button
                   type="button"
-                  className="w-9 h-9 shrink-0 rounded-xl hover:bg-[#1E293B] flex items-center justify-center text-[#475569] hover:text-[#94A3B8] transition-all cursor-pointer"
+                  className="w-9 h-9 shrink-0 rounded-sm hover:bg-surface-tile-3 flex items-center justify-center text-ink-muted-48 hover:text-body-on-dark transition-all duration-200 cursor-pointer"
                 >
                   <Smile className="w-4 h-4" />
                 </button>
@@ -757,12 +765,12 @@ export default function ChatView() {
                       ? `Message @${getDMName(activeGroupData!.title)}...`
                       : `Message #${activeGroupData?.title || "channel"}...`}
                     disabled={!connected}
-                    className="w-full bg-transparent border-none text-xs text-[#F8FAFC] placeholder:text-[#475569] focus:ring-0 focus:outline-none py-1.5 px-1 resize-none"
+                    className="w-full bg-transparent border-none caption text-body-on-dark placeholder:text-body-muted focus:ring-0 focus:outline-none py-1.5 px-1 resize-none"
                   />
                 </div>
                 <button
                   type="button"
-                  className="w-9 h-9 shrink-0 rounded-xl hover:bg-[#1E293B] flex items-center justify-center text-[#475569] hover:text-[#94A3B8] transition-all cursor-pointer"
+                  className="w-9 h-9 shrink-0 rounded-sm hover:bg-surface-tile-3 flex items-center justify-center text-ink-muted-48 hover:text-body-on-dark transition-all duration-200 cursor-pointer"
                 >
                   <Paperclip className="w-4 h-4" />
                 </button>
@@ -771,7 +779,7 @@ export default function ChatView() {
                   disabled={!connected || !inputText.trim()}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.92 }}
-                  className="w-9 h-9 shrink-0 rounded-xl bg-[#00E5FF] hover:bg-[#3B82F6] flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-md shadow-[#00E5FF]/15 cursor-pointer"
+                  className="w-9 h-9 shrink-0 rounded-sm bg-primary hover:bg-primary text-white flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5 ml-0.5" />
                 </motion.button>
@@ -783,13 +791,13 @@ export default function ChatView() {
         {/* ─── Group Settings Modal ─── */}
         {showGroupSettings && activeGroupData && (
           <>
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={() => setShowGroupSettings(false)} />
+            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm" onClick={() => setShowGroupSettings(false)} />
             <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-              <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#111827] border border-[#1E293B] rounded-2xl w-[420px] max-h-[80vh] overflow-hidden shadow-2xl pointer-events-auto flex flex-col">
+              <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-surface-tile-2 border border-white/10 rounded-sm w-[420px] max-h-[80vh] overflow-hidden pointer-events-auto flex flex-col">
                 {/* Header */}
-                <div className="p-5 border-b border-[#1E293B] flex items-center justify-between shrink-0">
-                  <h3 className="text-sm font-bold text-[#F8FAFC]">{isActiveDM ? "Contact Info" : "Group Settings"}</h3>
-                  <button onClick={() => setShowGroupSettings(false)} className="w-7 h-7 rounded-lg hover:bg-[#1E293B] flex items-center justify-center text-[#64748B] hover:text-[#F8FAFC] transition-all cursor-pointer">
+                <div className="p-5 border-b border-white/10 flex items-center justify-between shrink-0">
+                  <h3 className="body-strong text-body-on-dark">{isActiveDM ? "Contact Info" : "Group Settings"}</h3>
+                  <button onClick={() => setShowGroupSettings(false)} className="w-7 h-7 rounded-xs hover:bg-surface-tile-3 flex items-center justify-center text-ink-muted-48 hover:text-body-on-dark transition-all duration-200 cursor-pointer">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
@@ -797,31 +805,31 @@ export default function ChatView() {
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6">
                   {/* Group info */}
                   <div className="flex flex-col items-center gap-3">
-                    <div className="relative w-20 h-20 rounded-full overflow-hidden bg-[#1E293B] border border-[#334155]">
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden bg-surface-tile-3 border border-white/10">
                       {isActiveDM ? (
                         <img src={`https://i.pravatar.cc/80?u=${getDMName(activeGroupData.title).toLowerCase().replace(/\s+/g, ".")}@nexus`} alt="" className="w-full h-full object-cover" />
                       ) : activeGroupData.avatar ? (
                         <img src={activeGroupData.avatar} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#00E5FF]/20 to-[#3B82F6]/20">
-                          <span className="text-2xl font-bold text-[#00E5FF]">{activeGroupData.title.charAt(0).toUpperCase()}</span>
+                        <div className="w-full h-full flex items-center justify-center bg-primary/10">
+                          <span className="text-2xl font-bold text-primary">{activeGroupData.title.charAt(0).toUpperCase()}</span>
                         </div>
                       )}
                     </div>
                     {!isActiveDM && (
-                      <button className="text-[10px] text-[#00E5FF] font-bold hover:underline cursor-pointer">Change photo</button>
+                      <button className="fine-print text-primary font-bold hover:underline cursor-pointer">Change photo</button>
                     )}
                   </div>
 
                   {/* Group name editing */}
                   {isActiveDM ? (
                     <div className="text-center">
-                      <p className="text-base font-bold text-[#F8FAFC]">{getDMName(activeGroupData.title)}</p>
-                      <p className="text-[11px] text-[#64748B] mt-1">Direct Message</p>
+                      <p className="body-strong text-ink">{getDMName(activeGroupData.title)}</p>
+                      <p className="fine-print text-ink-muted-48 mt-1">Direct Message</p>
                     </div>
                   ) : (
-                    <div className="bg-[#0F172A] rounded-xl p-4 border border-[#1E293B]">
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-[#475569] mb-2">Group Name</p>
+                    <div className="bg-surface-tile-3 rounded-sm p-4 border border-white/10">
+                      <p className="fine-print font-bold uppercase tracking-widest text-body-muted mb-2">Group Name</p>
                       {editingGroupName ? (
                         <div className="flex gap-2">
                           <input
@@ -829,15 +837,15 @@ export default function ChatView() {
                             onChange={e => setGroupNameInput(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter") handleGroupNameSave(); if (e.key === "Escape") setEditingGroupName(false); }}
                             autoFocus
-                            className="flex-1 bg-[#111827] border border-[#334155] rounded-lg px-3 py-2 text-xs text-[#F8FAFC] outline-none focus:border-[#00E5FF]/40 transition-all"
+                            className="flex-1 bg-surface-tile-1 border border-white/10 rounded-xs px-3 py-2 caption text-body-on-dark outline-none focus:border-primary/40 transition-all"
                           />
-                          <button onClick={handleGroupNameSave} className="px-3 py-2 bg-[#00E5FF] text-[#0F172A] text-[10px] font-bold rounded-lg hover:bg-[#3B82F6] transition-all cursor-pointer">Save</button>
-                          <button onClick={() => setEditingGroupName(false)} className="px-3 py-2 bg-[#1E293B] text-[#94A3B8] text-[10px] font-bold rounded-lg hover:bg-[#334155] transition-all cursor-pointer">Cancel</button>
+                          <button onClick={handleGroupNameSave} className="px-3 py-2 bg-primary text-white fine-print font-bold rounded-xs hover:bg-primary transition-all duration-200 cursor-pointer">Save</button>
+                          <button onClick={() => setEditingGroupName(false)} className="px-3 py-2 bg-surface-tile-3 text-ink-muted-48 fine-print font-bold rounded-xs hover:bg-surface-tile-1 transition-all duration-200 cursor-pointer">Cancel</button>
                         </div>
                       ) : (
                         <div className="flex items-center justify-between">
-                          <p className="text-sm font-bold text-[#F8FAFC]">{activeGroupData.title}</p>
-                          <button onClick={() => { setGroupNameInput(activeGroupData.title); setEditingGroupName(true); }} className="text-[#00E5FF] hover:text-[#3B82F6] transition-colors cursor-pointer">
+                          <p className="body-strong text-body-on-dark">{activeGroupData.title}</p>
+                          <button onClick={() => { setGroupNameInput(activeGroupData.title); setEditingGroupName(true); }} className="text-primary hover:text-primary transition-colors cursor-pointer">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                           </button>
                         </div>
@@ -847,10 +855,10 @@ export default function ChatView() {
 
                   {/* Members section */}
                   {!isActiveDM && (
-                    <div className="bg-[#0F172A] rounded-xl p-4 border border-[#1E293B]">
+                    <div className="bg-surface-tile-3 rounded-sm p-4 border border-white/10">
                       <div className="flex items-center justify-between mb-3">
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-[#475569]">Members ({groupMembers.length})</p>
-                        <button onClick={handleOpenAddMember} className="text-[10px] text-[#00E5FF] font-bold hover:underline flex items-center gap-1 cursor-pointer">
+                        <p className="fine-print font-bold uppercase tracking-widest text-body-muted">Members ({groupMembers.length})</p>
+                        <button onClick={handleOpenAddMember} className="fine-print text-primary font-bold hover:underline flex items-center gap-1 cursor-pointer">
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
                           Add member
                         </button>
@@ -859,22 +867,22 @@ export default function ChatView() {
                           {groupMembers.map(m => {
                           const isSelf = m.id === currentUserId;
                           return (
-                            <div key={m.id} className="flex items-center justify-between p-2 rounded-xl hover:bg-[#111827] transition-colors group">
+                            <div key={m.id} className="flex items-center justify-between p-2 rounded-sm hover:bg-surface-tile-1 transition-colors duration-200 group">
                               <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-full overflow-hidden bg-[#1E293B] border border-[#334155]">
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-tile-3 border border-white/10">
                                   {m.avatar ? (
                                     <img src={m.avatar} alt="" className="w-full h-full object-cover" />
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-[#00E5FF]">{m.name.charAt(0).toUpperCase()}</div>
+                                    <div className="w-full h-full flex items-center justify-center fine-print font-bold text-primary">{m.name.charAt(0).toUpperCase()}</div>
                                   )}
                                 </div>
                                 <div>
-                                  <p className="text-xs font-bold text-[#F8FAFC]">{m.name} {isSelf && <span className="text-[9px] text-[#475569] font-normal">(you)</span>}</p>
-                                  <p className="text-[9px] text-[#64748B]">{m.email}</p>
+                                  <p className="caption font-bold text-body-on-dark">{m.name} {isSelf && <span className="fine-print text-body-muted font-normal">(you)</span>}</p>
+                                  <p className="fine-print text-ink-muted-48">{m.email}</p>
                                 </div>
                               </div>
                               {!isSelf && (
-                                <button onClick={() => handleRemoveMember(m.id)} className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-lg hover:bg-red-500/10 flex items-center justify-center text-[#475569] hover:text-red-400 transition-all cursor-pointer" title="Remove">
+                                <button onClick={() => handleRemoveMember(m.id)} className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-xs hover:bg-red-500/10 flex items-center justify-center text-ink-muted-48 hover:text-red-400 transition-all cursor-pointer" title="Remove">
                                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                 </button>
                               )}
@@ -882,7 +890,7 @@ export default function ChatView() {
                           );
                         })}
                         {groupMembers.length === 0 && (
-                          <p className="text-[11px] text-[#64748B] text-center py-4 italic">No members loaded</p>
+                          <p className="fine-print text-ink-muted-48 text-center py-4 italic">No members loaded</p>
                         )}
                       </div>
                     </div>
@@ -890,47 +898,47 @@ export default function ChatView() {
 
                   {/* Add member modal */}
                   {showAddMember && (
-                    <div className="bg-[#0F172A] rounded-xl p-4 border border-[#1E293B]">
+                    <div className="bg-surface-tile-3 rounded-sm p-4 border border-white/10">
                       <div className="flex items-center justify-between mb-3">
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-[#475569]">Add Member</p>
-                        <button onClick={() => setShowAddMember(false)} className="text-[10px] text-[#64748B] hover:text-[#F8FAFC] transition-colors cursor-pointer">Cancel</button>
+                        <p className="fine-print font-bold uppercase tracking-widest text-body-muted">Add Member</p>
+                        <button onClick={() => setShowAddMember(false)} className="fine-print text-body-muted hover:text-body-on-dark transition-colors duration-200 cursor-pointer">Cancel</button>
                       </div>
                       <input
                         value={addMemberSearch}
                         onChange={e => handleAddMemberSearch(e.target.value)}
                         placeholder="Search by name or email..."
-                        className="w-full bg-[#111827] border border-[#334155] rounded-lg px-3 py-2 text-xs text-[#F8FAFC] outline-none focus:border-[#00E5FF]/40 transition-all mb-3 placeholder:text-[#475569]"
+                        className="w-full bg-surface-tile-1 border border-white/10 rounded-xs px-3 py-2 caption text-body-on-dark outline-none focus:border-primary/40 transition-all mb-3 placeholder:text-body-muted"
                       />
                       <div className="space-y-1 max-h-[160px] overflow-y-auto custom-scrollbar">
                         {addMemberResults.filter(u => !groupMembers.some(m => m.id === u.id)).map(u => (
-                          <div key={u.id} className="flex items-center justify-between p-2 rounded-xl hover:bg-[#111827] transition-colors">
+                          <div key={u.id} className="flex items-center justify-between p-2 rounded-sm hover:bg-surface-tile-1 transition-colors duration-200">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#1E293B] border border-[#334155]">
+                              <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-tile-3 border border-white/10">
                                 {u.avatar ? (
                                   <img src={u.avatar} alt="" className="w-full h-full object-cover" />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-[#00E5FF]">{u.name.charAt(0).toUpperCase()}</div>
+                                  <div className="w-full h-full flex items-center justify-center fine-print font-bold text-primary">{u.name.charAt(0).toUpperCase()}</div>
                                 )}
                               </div>
                               <div>
-                                <p className="text-xs font-bold text-[#F8FAFC]">{u.name}</p>
-                                <p className="text-[9px] text-[#64748B]">{u.email}</p>
+                                <p className="caption font-bold text-body-on-dark">{u.name}</p>
+                                <p className="fine-print text-body-muted">{u.email}</p>
                               </div>
                             </div>
-                            <button onClick={() => handleAddMember(u.id)} className="px-3 py-1.5 bg-[#00E5FF]/10 hover:bg-[#00E5FF]/20 border border-[#00E5FF]/20 rounded-lg text-[10px] font-bold text-[#00E5FF] transition-all cursor-pointer">
+                            <button onClick={() => handleAddMember(u.id)} className="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-xs fine-print font-bold text-primary transition-all duration-200 cursor-pointer">
                               Add
                             </button>
                           </div>
                         ))}
                         {addMemberResults.filter(u => !groupMembers.some(m => m.id === u.id)).length === 0 && (
-                          <p className="text-[11px] text-[#64748B] text-center py-3 italic">No users found</p>
+                          <p className="fine-print text-ink-muted-48 text-center py-3 italic">No users found</p>
                         )}
                       </div>
                     </div>
                   )}
 
                   {/* Delete action */}
-                  <button onClick={() => { setShowGroupSettings(false); setShowDeleteGroupConfirm(true); }} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[11px] text-red-400 hover:bg-red-500/10 border border-red-500/10 transition-all cursor-pointer">
+                  <button onClick={() => { setShowGroupSettings(false); setShowDeleteGroupConfirm(true); }} className="w-full flex items-center justify-center gap-2 py-3 rounded-sm fine-print text-red-400 hover:bg-red-500/10 border border-red-500/10 transition-all duration-200 cursor-pointer">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                     Delete {isActiveDM ? "conversation" : "channel"}
                   </button>
@@ -943,19 +951,19 @@ export default function ChatView() {
         {/* ─── Delete message confirmation ─── */}
         {deleteMsgId && (
           <>
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteMsgId(null)} />
+            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm" onClick={() => setDeleteMsgId(null)} />
             <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-              <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 w-80 shadow-2xl pointer-events-auto">
-                <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+              <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-surface-tile-2 border border-white/10 rounded-sm p-6 w-80 pointer-events-auto">
+                <div className="w-12 h-12 rounded-sm bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </div>
-                <p className="text-sm font-bold text-[#F8FAFC] text-center">Delete message?</p>
-                <p className="text-[11px] text-[#64748B] text-center mt-2">This action cannot be undone.</p>
+                <p className="body-strong text-body-on-dark text-center">Delete message?</p>
+                <p className="fine-print text-body-muted text-center mt-2">This action cannot be undone.</p>
                 <div className="flex gap-2 mt-5">
-                  <button onClick={() => setDeleteMsgId(null)} className="flex-1 h-9 rounded-xl bg-[#1E293B] hover:bg-[#334155] text-[11px] text-[#F8FAFC] font-bold transition-all cursor-pointer">
+                  <button onClick={() => setDeleteMsgId(null)} className="flex-1 h-9 rounded-sm bg-surface-tile-3 hover:bg-surface-tile-1 fine-print text-body-on-dark font-bold transition-all duration-200 cursor-pointer">
                     Cancel
                   </button>
-                  <button onClick={() => handleDeleteMessage(deleteMsgId)} className="flex-1 h-9 rounded-xl bg-red-500 hover:bg-red-600 text-[11px] text-white font-bold transition-all cursor-pointer">
+                  <button onClick={() => handleDeleteMessage(deleteMsgId)} className="flex-1 h-9 rounded-sm bg-red-500 hover:bg-red-600 fine-print text-white font-bold transition-all duration-200 cursor-pointer">
                     Delete
                   </button>
                 </div>
@@ -967,19 +975,19 @@ export default function ChatView() {
         {/* ─── Delete group confirmation ─── */}
         {showDeleteGroupConfirm && (
           <>
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" onClick={() => setShowDeleteGroupConfirm(false)} />
+            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm" onClick={() => setShowDeleteGroupConfirm(false)} />
             <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-              <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 w-80 shadow-2xl pointer-events-auto">
-                <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+              <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-surface-tile-2 border border-white/10 rounded-sm p-6 w-80 pointer-events-auto">
+                <div className="w-12 h-12 rounded-sm bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </div>
-                <p className="text-sm font-bold text-[#F8FAFC] text-center">Delete this conversation?</p>
-                <p className="text-[11px] text-[#64748B] text-center mt-2">All messages will be permanently removed.</p>
+                <p className="body-strong text-body-on-dark text-center">Delete this conversation?</p>
+                <p className="fine-print text-body-muted text-center mt-2">All messages will be permanently removed.</p>
                 <div className="flex gap-2 mt-5">
-                  <button onClick={() => setShowDeleteGroupConfirm(false)} className="flex-1 h-9 rounded-xl bg-[#1E293B] hover:bg-[#334155] text-[11px] text-[#F8FAFC] font-bold transition-all cursor-pointer">
+                  <button onClick={() => setShowDeleteGroupConfirm(false)} className="flex-1 h-9 rounded-sm bg-surface-tile-3 hover:bg-surface-tile-1 fine-print text-body-on-dark font-bold transition-all duration-200 cursor-pointer">
                     Cancel
                   </button>
-                  <button onClick={handleDeleteGroup} className="flex-1 h-9 rounded-xl bg-red-500 hover:bg-red-600 text-[11px] text-white font-bold transition-all cursor-pointer">
+                  <button onClick={handleDeleteGroup} className="flex-1 h-9 rounded-sm bg-red-500 hover:bg-red-600 fine-print text-white font-bold transition-all duration-200 cursor-pointer">
                     Delete
                   </button>
                 </div>

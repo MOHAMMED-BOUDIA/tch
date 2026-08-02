@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
 import {
-  Plus, Minus, Maximize, RefreshCw, User, X, Send, Search,
+  Plus, Minus, Maximize, Minimize, RotateCcw, RefreshCw, User, X, Send, Search,
   TrendingUp, TrendingDown, Compass, Award, Activity, Mail, Calendar, MapPin, Globe, MessageSquare
 } from "lucide-react";
 import { GraphNode, GraphConnection } from "@/lib/types";
@@ -60,7 +60,7 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
   opacity: 0.1 + Math.random() * 0.2,
 }));
 
-export default function GraphView({ searchQuery = "", onMessageUser, onViewProfile, viewMode = "graph", readOnly = false }: { searchQuery?: string; onMessageUser?: (node: GraphNode) => void; onViewProfile?: (node: GraphNode) => void; viewMode?: "graph" | "list"; readOnly?: boolean }) {
+export default function GraphView({ searchQuery = "", onMessageUser, onViewProfile, viewMode = "graph", readOnly = false, fullScreen: controlledFullScreen, onFullScreenChange }: { searchQuery?: string; onMessageUser?: (node: GraphNode) => void; onViewProfile?: (node: GraphNode) => void; viewMode?: "graph" | "list"; readOnly?: boolean; fullScreen?: boolean; onFullScreenChange?: (full: boolean) => void }) {
   const [nodes, setNodes] = useState<GraphNode[]>([]);
   const [connections, setConnections] = useState<GraphConnection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,15 +124,7 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
   }, [activeNode]);
 
   const handleNodeClick = (e: React.MouseEvent, node: GraphNode) => {
-    const now = Date.now();
-    if (lastClickNodeId.current === node.id && now - lastClickTime.current < 300) {
-      setSelectedNode(node);
-      lastClickTime.current = 0;
-      lastClickNodeId.current = null;
-    } else {
-      lastClickTime.current = now;
-      lastClickNodeId.current = node.id;
-    }
+    setSelectedNode(node);
   };
 
   const handleViewportMouseDown = (e: React.MouseEvent) => {
@@ -205,9 +197,36 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
     setHoveredNode(null);
   };
 
+  const fullScreen = controlledFullScreen ?? false;
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.1, 1.8));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.4));
   const handleRecenter = () => { setZoom(1); setPan({ x: 0, y: 0 }); };
+  const toggleFullScreen = () => { onFullScreenChange?.(!fullScreen); handleRecenter(); };
+
+  const zoomRef = useRef(zoom);
+  const panRef = useRef(pan);
+  zoomRef.current = zoom;
+  panRef.current = pan;
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      const factor = e.deltaY < 0 ? 1.12 : 0.89;
+      const newZoom = Math.min(Math.max(zoomRef.current * factor, 0.4), 1.8);
+      if (newZoom === zoomRef.current) return;
+      const worldX = (mouseX - panRef.current.x) / zoomRef.current;
+      const worldY = (mouseY - panRef.current.y) / zoomRef.current;
+      setPan({ x: mouseX - worldX * newZoom, y: mouseY - worldY * newZoom });
+      setZoom(newZoom);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [loading]);
 
   const getNodeConnections = useCallback((nodeId: number): GraphNode[] => {
     const connectedIds = connections.filter(c => c.from === nodeId || c.to === nodeId).map(c => c.from === nodeId ? c.to : c.from);
@@ -223,12 +242,12 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
 
   if (loading) {
     return (
-      <div className="flex-1 h-full flex items-center justify-center bg-[#0F172A]">
+      <div className="flex-1 h-full flex items-center justify-center bg-canvas-parchment">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center mx-auto">
-            <RefreshCw className="w-5 h-5 text-[#00E5FF] animate-spin" />
+          <div className="w-10 h-10 rounded-xs bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto">
+            <RefreshCw className="w-5 h-5 text-primary animate-spin" />
           </div>
-          <p className="text-xs text-[#94A3B8]">Mapping connections...</p>
+          <p className="caption text-ink-muted-48">Mapping connections...</p>
         </div>
       </div>
     );
@@ -239,25 +258,21 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
     : null;
 
   return (
-    <div className="flex-1 h-full overflow-hidden relative select-none bg-gradient-to-b from-[#0F172A] via-[#0b1322] to-[#0F172A]"
+    <div className="flex-1 h-full overflow-hidden relative select-none bg-canvas-parchment"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={() => { handleMouseUp(); setHoveredNode(null); }}
       ref={viewportRef}
     >
-      {/* Background radial glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#00E5FF]/[0.025] blur-[120px]" />
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-[#3B82F6]/[0.015] blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-[#00E5FF]/[0.01] blur-[80px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-primary/[0.02] blur-[120px]" />
       </div>
 
-      {/* Animated particles */}
       <div className="absolute inset-0 pointer-events-none z-[1]">
         {PARTICLES.map((p) => (
           <motion.div
             key={p.id}
-            className="absolute rounded-full bg-[#00E5FF]"
+            className="absolute rounded-full bg-primary"
             style={{
               width: p.r * 2,
               height: p.r * 2,
@@ -279,23 +294,19 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
         ))}
       </div>
 
-      <div className="absolute inset-0 subtle-grid pointer-events-none opacity-10 z-[1]"
-        style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: "0 0" }}
-      />
-
       <div className="absolute inset-0 cursor-grab active:cursor-grabbing z-10" onMouseDown={handleViewportMouseDown}>
         <div className="absolute" style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: "0 0", width: "3000px", height: "3000px" }}>
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
             <defs>
               <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.08" />
-                <stop offset="50%" stopColor="#00E5FF" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.15" />
+                <stop offset="0%" stopColor="#0066cc" stopOpacity="0.08" />
+                <stop offset="50%" stopColor="#0066cc" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#0071e3" stopOpacity="0.15" />
               </linearGradient>
               <linearGradient id="lineGradHover" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.15" />
-                <stop offset="50%" stopColor="#00E5FF" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.5" />
+                <stop offset="0%" stopColor="#0066cc" stopOpacity="0.15" />
+                <stop offset="50%" stopColor="#0066cc" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#0071e3" stopOpacity="0.5" />
               </linearGradient>
               <filter id="edgeGlow">
                 <feGaussianBlur stdDeviation="2.5" result="blur" />
@@ -320,12 +331,12 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
               return (
                 <g key={idx} opacity={isFaded ? 0.1 : 1} style={{ transition: "opacity 0.3s ease" }}>
                   <path d={path} stroke="url(#lineGrad)" strokeWidth="2" fill="none" />
-                  <path d={path} stroke="#00E5FF" strokeWidth="1" strokeOpacity="0.12" strokeDasharray="4,8" fill="none" />
-                  <path d={path} stroke="#00E5FF" strokeWidth="1.5" strokeOpacity="0.25" strokeDasharray="3,12" fill="none" className="animate-flow" />
+                  <path d={path} stroke="#0066cc" strokeWidth="1" strokeOpacity="0.12" strokeDasharray="4,8" fill="none" />
+                  <path d={path} stroke="#0066cc" strokeWidth="1.5" strokeOpacity="0.25" strokeDasharray="3,12" fill="none" className="animate-flow" />
                   {isHoveredConnection && (
                     <>
                       <path d={path} stroke="url(#lineGradHover)" strokeWidth="3.5" fill="none" filter="url(#edgeGlow)" />
-                      <path d={path} stroke="#00E5FF" strokeWidth="2" strokeOpacity="0.4" fill="none" filter="url(#edgeGlowStrong)" className="animate-flow" />
+                      <path d={path} stroke="#0066cc" strokeWidth="2" strokeOpacity="0.4" fill="none" filter="url(#edgeGlowStrong)" className="animate-flow" />
                     </>
                   )}
                 </g>
@@ -357,23 +368,23 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
                       animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.05, 0.3] }}
                       transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                       style={{
-                        background: "radial-gradient(circle, rgba(0,229,255,0.25) 0%, rgba(59,130,246,0.08) 50%, transparent 70%)",
+                        background: "radial-gradient(circle, rgba(0,102,204,0.25) 0%, rgba(0,113,227,0.08) 50%, transparent 70%)",
                       }}
                     />
                   )}
                   {isActive && (
                     <motion.div
-                      className="absolute -inset-2 rounded-full border border-[#00E5FF]/20"
+                      className="absolute -inset-2 rounded-full border border-primary/20"
                       animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.05, 0.3] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                     />
                   )}
-                  <div className={`relative w-16 h-16 rounded-full overflow-hidden border-2 transition-all duration-300 flex items-center justify-center bg-[#111827] ${
+                  <div className={`relative w-16 h-16 rounded-full overflow-hidden border-2 transition-all duration-300 flex items-center justify-center bg-canvas ${
                     isActive
-                      ? "border-[#00E5FF] shadow-[0_0_25px_rgba(0,229,255,0.45)]"
+                      ? "border-primary shadow-[0_0_25px_rgba(0,102,204,0.45)]"
                       : isHovered
-                        ? "border-[#00E5FF]/60 shadow-[0_0_14px_rgba(0,229,255,0.2)]"
-                        : "border-[#1E293B]"
+                        ? "border-primary/60 shadow-[0_0_14px_rgba(0,102,204,0.2)]"
+                        : "border-hairline"
                   }`}>
                     <img
                       src={node.avatar}
@@ -382,14 +393,14 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
                       loading="lazy"
                       referrerPolicy="no-referrer"
                     />
-                    <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0F172A] ${
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-canvas ${
                       node.status === "online"
-                        ? "bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.6)]"
-                        : "bg-slate-500"
+                        ? "bg-primary shadow-[0_0_6px_rgba(0,102,204,0.6)]"
+                        : "bg-ink-muted-48"
                     }`} />
                   </div>
                 </div>
-                <span className="mt-2 text-[10px] font-semibold text-[#F8FAFC] text-center leading-tight max-w-[80px] truncate">
+                <span className="mt-2 caption text-ink text-center leading-tight max-w-[80px] truncate">
                   {node.name.split(" ")[0]}
                 </span>
               </motion.div>
@@ -400,85 +411,89 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
 
       <div className="absolute bottom-6 left-6 flex flex-col gap-3 z-20">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="glass-card bg-[#111827]/90 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-3 border border-[#1E293B] shadow-lg"
-        >
-          <div className="flex -space-x-2">
-            {filteredNodes.slice(0, 3).map((n) => (
-              <div key={n.id} className="w-6 h-6 rounded-full border border-[#0F172A] overflow-hidden bg-[#0F172A]">
-                <img src={n.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
-              </div>
-            ))}
-          </div>
-          <span className="text-[11px] font-bold text-[#cbd5e1]">{filteredNodes.length} collaborator{filteredNodes.length !== 1 ? "s" : ""}</span>
-        </motion.div>
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-canvas/90 backdrop-blur-md px-4 py-2 rounded-pill flex items-center gap-3 border border-hairline product-shadow"
+          >
+            <div className="flex -space-x-2">
+              {filteredNodes.slice(0, 3).map((n) => (
+                <div key={n.id} className="w-6 h-6 rounded-full border border-canvas overflow-hidden bg-canvas-parchment">
+                  <img src={n.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
+                </div>
+              ))}
+            </div>
+            <span className="caption-strong text-ink">{filteredNodes.length} collaborator{filteredNodes.length !== 1 ? "s" : ""}</span>
+          </motion.div>
 
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="glass-card bg-[#111827]/95 backdrop-blur-md p-1.5 rounded-2xl flex items-center gap-1 border border-[#1E293B] shadow-2xl w-fit"
+          className="bg-canvas/95 backdrop-blur-md p-1.5 rounded-pill flex items-center gap-1 border border-hairline product-shadow w-fit"
         >
-          <button onClick={handleZoomIn} className="w-10 h-10 flex items-center justify-center hover:bg-[#0F172A] text-[#94A3B8] hover:text-[#00E5FF] rounded-xl transition-all duration-200 cursor-pointer" title="Zoom In">
-            <Plus className="w-4 h-4" />
+          <button onClick={handleZoomIn} className="w-10 h-10 flex items-center justify-center hover:bg-canvas-parchment text-ink-muted-48 hover:text-primary rounded-xs transition-all duration-200 cursor-pointer" title="Zoom In">
+                <Plus className="w-4 h-4" />
+              </button>
+              <div className="w-px h-6 bg-hairline" />
+              <button onClick={handleZoomOut} className="w-10 h-10 flex items-center justify-center hover:bg-canvas-parchment text-ink-muted-48 hover:text-primary rounded-xs transition-all duration-200 cursor-pointer" title="Zoom Out">
+                <Minus className="w-4 h-4" />
+              </button>
+              <div className="w-px h-6 bg-hairline" />
+          <button onClick={handleRecenter} className="w-10 h-10 flex items-center justify-center hover:bg-canvas-parchment text-ink-muted-48 hover:text-primary rounded-xs transition-all duration-200 cursor-pointer" title="Reset View">
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
-          <div className="w-px h-6 bg-[#1E293B]" />
-          <button onClick={handleZoomOut} className="w-10 h-10 flex items-center justify-center hover:bg-[#0F172A] text-[#94A3B8] hover:text-[#00E5FF] rounded-xl transition-all duration-200 cursor-pointer" title="Zoom Out">
-            <Minus className="w-4 h-4" />
-          </button>
-          <div className="w-px h-6 bg-[#1E293B]" />
-          <button onClick={handleRecenter} className="w-10 h-10 flex items-center justify-center hover:bg-[#0F172A] text-[#94A3B8] hover:text-[#00E5FF] rounded-xl transition-all duration-200 cursor-pointer" title="Recenter Map">
-            <Maximize className="w-3.5 h-3.5" />
+          <div className="w-px h-6 bg-hairline" />
+          <button onClick={toggleFullScreen} className="w-10 h-10 flex items-center justify-center hover:bg-canvas-parchment text-ink-muted-48 hover:text-primary rounded-xs transition-all duration-200 cursor-pointer" title={fullScreen ? "Exit Full Screen" : "Full Screen"}>
+            {fullScreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
           </button>
         </motion.div>
       </div>
 
       {showNoResults && (
         <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
-          <div className="bg-[#111827]/90 backdrop-blur-md border border-[#1E293B] rounded-2xl px-8 py-6 text-center shadow-2xl">
-            <div className="w-12 h-12 rounded-xl bg-[#1E293B] border border-[#1E293B] flex items-center justify-center mx-auto mb-3">
-              <Search className="w-5 h-5 text-[#475569]" />
+          <div className="bg-canvas/90 backdrop-blur-md border border-hairline rounded-sm px-8 py-6 text-center product-shadow">
+            <div className="w-12 h-12 rounded-xs bg-canvas-parchment border border-hairline flex items-center justify-center mx-auto mb-3">
+              <Search className="w-5 h-5 text-ink-muted-48" />
             </div>
-            <p className="text-sm font-bold text-[#F8FAFC]">No results found</p>
-            <p className="text-[11px] text-[#94A3B8] mt-1">No team members match &ldquo;{searchQuery}&rdquo;</p>
+            <p className="body-strong text-ink">No results found</p>
+            <p className="caption text-ink-muted-48 mt-1">No team members match &ldquo;{searchQuery}&rdquo;</p>
           </div>
         </div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4, delay: 0.15 }}
-        className="absolute top-6 right-6 glass-card bg-[#111827]/95 backdrop-blur-xl p-4 rounded-2xl w-64 border border-[#1E293B] shadow-2xl z-20"
-      >
-        <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#94A3B8] mb-3.5 flex items-center gap-1.5">
-          <Activity className="w-3.5 h-3.5 text-[#00E5FF]" /> Active Node Metrics
+<motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
+          className="absolute top-6 right-6 bg-canvas/95 backdrop-blur-xl p-4 rounded-sm w-64 border border-hairline product-shadow z-20"
+        >
+        <h4 className="fine-print font-bold uppercase tracking-widest text-ink-muted-48 mb-3.5 flex items-center gap-1.5">
+          <Activity className="w-3.5 h-3.5 text-primary" /> Active Node Metrics
         </h4>
         {activeNode ? (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-10 h-10 rounded-full overflow-hidden bg-[#0F172A] border border-[#1E293B] flex-shrink-0">
+              <div className="relative w-10 h-10 rounded-full overflow-hidden bg-canvas-parchment border border-hairline flex-shrink-0">
                 <img src={activeNode.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
               </div>
               <div className="min-w-0">
-                <p className="font-bold text-xs text-[#F8FAFC] truncate leading-none">{activeNode.name}</p>
-                <p className="text-[9px] text-[#94A3B8] mt-1 truncate">{activeNode.role}</p>
+                <p className="caption-strong text-ink truncate leading-none">{activeNode.name}</p>
+                <p className="fine-print text-ink-muted-48 mt-1 truncate">{activeNode.role}</p>
               </div>
             </div>
-            <div className="space-y-3 pt-2.5 border-t border-[#1E293B]">
+            <div className="space-y-3 pt-2.5 border-t border-hairline">
               <div>
-                <div className="flex justify-between items-center text-[10px] mb-1.5">
-                  <span className="text-[#94A3B8] flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Contribution</span>
-                  <span className="text-[#00E5FF] font-bold flex items-center gap-1">
+                <div className="flex justify-between items-center fine-print mb-1.5">
+                  <span className="text-ink-muted-48 flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Contribution</span>
+                  <span className="text-primary font-bold flex items-center gap-1">
                     {activeNode.contribution}
-                    <TrendingUp className="w-2.5 h-2.5 text-green-400" />
+                    <TrendingUp className="w-2.5 h-2.5 text-primary" />
                   </span>
                 </div>
-                <div className="h-1.5 bg-[#0F172A] rounded-full overflow-hidden">
+                <div className="h-1.5 bg-canvas-parchment rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-[#00E5FF] to-[#3B82F6] rounded-full shadow-[0_0_8px_rgba(0,229,255,0.4)]"
+                    className="h-full bg-primary rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: barsAnimated ? activeNode.contribution : 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
@@ -489,7 +504,7 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
                     <polyline
                       points={generateSparkline()}
                       fill="none"
-                      stroke="#00E5FF"
+                      stroke="#0066cc"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -499,91 +514,91 @@ export default function GraphView({ searchQuery = "", onMessageUser, onViewProfi
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-[10px] mb-1">
-                  <span className="text-[#94A3B8] flex items-center gap-1"><Award className="w-3 h-3" /> Quality Index</span>
-                  <span className="text-green-400 font-bold flex items-center gap-1">
-                    98.5 <TrendingUp className="w-2.5 h-2.5 text-green-400" />
+                <div className="flex justify-between fine-print mb-1">
+                  <span className="text-ink-muted-48 flex items-center gap-1"><Award className="w-3 h-3" /> Quality Index</span>
+                  <span className="text-primary font-bold flex items-center gap-1">
+                    98.5 <TrendingUp className="w-2.5 h-2.5 text-primary" />
                   </span>
                 </div>
-                <div className="h-1.5 bg-[#0F172A] rounded-full overflow-hidden">
+                <div className="h-1.5 bg-canvas-parchment rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.3)]"
+                    className="h-full bg-primary rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: barsAnimated ? "98.5%" : 0 }}
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
                   />
                 </div>
               </div>
-              <div className="flex justify-between text-[10px] pt-1">
-                <span className="text-[#94A3B8] flex items-center gap-1"><Compass className="w-3 h-3" /> Focus Index</span>
-                <span className="text-[#00E5FF] font-bold flex items-center gap-1">
-                  A++ <TrendingUp className="w-2.5 h-2.5 text-green-400" />
+              <div className="flex justify-between fine-print pt-1">
+                <span className="text-ink-muted-48 flex items-center gap-1"><Compass className="w-3 h-3" /> Focus Index</span>
+                <span className="text-primary font-bold flex items-center gap-1">
+                  A++ <TrendingUp className="w-2.5 h-2.5 text-primary" />
                 </span>
               </div>
             </div>
           </div>
         ) : (
-          <p className="text-[#94A3B8] text-xs italic">Hover any node for telemetry.</p>
+          <p className="text-ink-muted-48 caption italic">Hover any node for telemetry.</p>
         )}
       </motion.div>
 
       {selectedNode && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm"
           onMouseDown={() => { setSelectedNode(null); setChatSent(false); }}>
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#111827]/95 backdrop-blur-xl border border-[#1E293B] rounded-3xl p-6 w-[380px] shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
+            className="bg-canvas/95 backdrop-blur-xl border border-hairline rounded-sm p-6 w-[380px] product-shadow max-h-[90vh] overflow-y-auto custom-scrollbar"
             onMouseDown={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between mb-5">
               <div className="flex items-center gap-3">
-                <div className="relative w-14 h-14 rounded-full overflow-hidden border border-[#1E293B] bg-[#111827]">
+                <div className="relative w-14 h-14 rounded-full overflow-hidden border border-hairline bg-canvas">
                   <img src={selectedNode.avatar} alt="" className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
-                  <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0F172A] ${selectedNode.status === "online" ? "bg-green-500" : "bg-slate-500"}`} />
+                  <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-canvas ${selectedNode.status === "online" ? "bg-primary" : "bg-ink-muted-48"}`} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm text-[#F8FAFC]">{selectedNode.name}</h3>
-                  <p className="text-[10px] text-[#94A3B8] mt-0.5">{selectedNode.role}</p>
-                  <span className={`text-[9px] font-bold mt-1 inline-block ${selectedNode.status === "online" ? "text-green-400" : "text-[#94A3B8]"}`}>
+                  <h3 className="body-strong text-ink">{selectedNode.name}</h3>
+                  <p className="fine-print text-ink-muted-48 mt-0.5">{selectedNode.role}</p>
+                  <span className={`fine-print font-bold mt-1 inline-block ${selectedNode.status === "online" ? "text-primary" : "text-ink-muted-48"}`}>
                     {selectedNode.status === "online" ? "● Online" : "● Away"}
                   </span>
                 </div>
               </div>
-              <button onClick={() => { setSelectedNode(null); setChatSent(false); }} className="w-7 h-7 rounded-full hover:bg-[#0F172A] flex items-center justify-center text-[#94A3B8] hover:text-[#F8FAFC] transition-colors cursor-pointer">
+              <button onClick={() => { setSelectedNode(null); setChatSent(false); }} className="w-7 h-7 rounded-full hover:bg-canvas-parchment flex items-center justify-center text-ink-muted-48 hover:text-ink transition-colors cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-3 mb-4 px-1">
-              <div className="flex items-center gap-2.5 text-[11px] text-[#94A3B8]">
-                <Mail className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <div className="flex items-center gap-2.5 caption text-ink-muted-48">
+                <Mail className="w-3.5 h-3.5 text-ink-muted-48" />
                 <span>{selectedNode.name.toLowerCase().replace(" ", ".")}@nexus.io</span>
               </div>
-              <div className="flex items-center gap-2.5 text-[11px] text-[#94A3B8]">
-                <MapPin className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <div className="flex items-center gap-2.5 caption text-ink-muted-48">
+                <MapPin className="w-3.5 h-3.5 text-ink-muted-48" />
                 <span>Remote · Available</span>
               </div>
             </div>
-            <div className="mb-4 pt-3 border-t border-[#1E293B] px-1">
-              <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#94A3B8] mb-2.5 flex items-center gap-1.5">
+            <div className="mb-4 pt-3 border-t border-hairline px-1">
+              <h4 className="fine-print font-bold uppercase tracking-widest text-ink-muted-48 mb-2.5 flex items-center gap-1.5">
                 <Globe className="w-3 h-3" /> Connections ({getNodeConnections(selectedNode.id).length})
               </h4>
               <div className="flex flex-wrap gap-2">
                 {getNodeConnections(selectedNode.id).map(conn => (
-                  <div key={conn.id} className="flex items-center gap-1.5 bg-[#0F172A] rounded-lg px-2.5 py-1.5 border border-[#1E293B]">
-                    <div className="w-5 h-5 rounded-full overflow-hidden bg-[#111827]">
+                  <div key={conn.id} className="flex items-center gap-1.5 bg-canvas-parchment rounded-xs px-2.5 py-1.5 border border-hairline">
+                    <div className="w-5 h-5 rounded-full overflow-hidden bg-canvas">
                       <img src={conn.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
                     </div>
-                    <span className="text-[10px] text-[#cbd5e1] font-medium">{conn.name.split(" ")[0]}</span>
+                    <span className="fine-print text-ink font-medium">{conn.name.split(" ")[0]}</span>
                   </div>
                 ))}
                 {getNodeConnections(selectedNode.id).length === 0 && (
-                  <span className="text-[10px] text-[#94A3B8] italic">No direct connections</span>
+                  <span className="fine-print text-ink-muted-48 italic">No direct connections</span>
                 )}
               </div>
             </div>
-            <div className="pt-3 border-t border-[#1E293B] px-1">
-              <button onClick={() => { onViewProfile?.(selectedNode); setSelectedNode(null); setChatSent(false); }} className="w-full bg-[#00E5FF]/10 hover:bg-[#3B82F6]/20 border border-[#00E5FF]/20 h-9 rounded-xl text-[11px] text-[#00E5FF] font-bold transition-all duration-200 cursor-pointer mb-3">
+            <div className="pt-3 border-t border-hairline px-1 space-y-2">
+              <button onClick={() => { onViewProfile?.(selectedNode); setSelectedNode(null); setChatSent(false); }} className="w-full bg-primary hover:bg-primary-focus text-white caption-strong h-9 rounded-xs transition-all duration-200 cursor-pointer">
                 View Full Profile
               </button>
-              <button onClick={() => { onMessageUser?.(selectedNode); setSelectedNode(null); }} className="w-full bg-[#0F172A] hover:bg-[#1E293B] border border-[#1E293B] h-9 rounded-xl text-[11px] text-[#cbd5e1] hover:text-[#F8FAFC] transition-all duration-200 cursor-pointer">
+              <button onClick={() => { onMessageUser?.(selectedNode); setSelectedNode(null); }} className="w-full bg-canvas-parchment hover:bg-canvas-parchment border border-hairline h-9 rounded-xs caption text-ink hover:text-ink transition-all duration-200 cursor-pointer">
                 Open Chat
               </button>
             </div>

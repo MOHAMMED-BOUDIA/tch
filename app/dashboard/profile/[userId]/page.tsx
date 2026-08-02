@@ -24,7 +24,7 @@ export default function UserProfilePage() {
   if (!userData) {
     return (
       <div className="flex items-center justify-center h-full">
-        <p className="text-xs text-[#475569]">Loading profile...</p>
+        <p className="caption text-ink-muted-48">Loading profile...</p>
       </div>
     );
   }

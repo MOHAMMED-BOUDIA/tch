@@ -21,7 +21,7 @@ const AVAILABLE_SKILLS = [
   "Machine Learning", "DevOps", "PostgreSQL", "Redis"
 ];
 
-function Sparkline({ data, color = "#00E5FF", height = 40 }: { data: number[]; color?: string; height?: number }) {
+function Sparkline({ data, color = "#0066cc", height = 40 }: { data: number[]; color?: string; height?: number }) {
   if (!data.length) return null;
   const max = Math.max(...data, 1);
   const w = 160;
@@ -46,9 +46,9 @@ function CollaborationScore({ score }: { score: number }) {
   const offset = circ - (score / 100) * circ;
   return (
     <svg width="72" height="72" viewBox="0 0 72 72" className="shrink-0">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#1E293B" strokeWidth="5" />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#00E5FF" strokeWidth="5" strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" transform={`rotate(-90 ${cx} ${cy})`} />
-      <text x={cx} y={cy + 5} textAnchor="middle" className="fill-[#F8FAFC] text-[10px] font-bold">{score}%</text>
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#e0e0e0" strokeWidth="5" />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#0066cc" strokeWidth="5" strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" transform={`rotate(-90 ${cx} ${cy})`} />
+      <text x={cx} y={cy + 5} textAnchor="middle" className="fill-ink text-[10px] font-bold">{score}%</text>
     </svg>
   );
 }
@@ -254,15 +254,15 @@ export default function ProfileView() {
   const toggleFollow = (id: string) => setFollowedState(prev => ({ ...prev, [id]: !prev[id] }));
 
   const StatusIcon = profile.status === "online" ? Wifi : profile.status === "busy" ? MinusCircle : Moon;
-  const statusColor = profile.status === "online" ? "text-green-400" : profile.status === "busy" ? "text-yellow-400" : "text-[#64748B]";
-  const roleColor = profile.role === "admin" ? "text-[#00E5FF] border-[#00E5FF]/30 bg-[#00E5FF]/10" : profile.role === "coordinator" ? "text-purple-400 border-purple-500/30 bg-purple-500/10" : "text-blue-400 border-blue-500/30 bg-blue-500/10";
+  const statusColor = profile.status === "online" ? "text-green-400" : profile.status === "busy" ? "text-yellow-400" : "text-ink-muted-48";
+  const roleColor = profile.role === "admin" ? "text-primary border-primary/30 bg-primary/10" : profile.role === "coordinator" ? "text-purple-400 border-purple-500/30 bg-purple-500/10" : "text-blue-400 border-blue-500/30 bg-blue-500/10";
 
   return (
-    <div className="flex-1 overflow-y-auto custom-scrollbar h-full bg-[#0F172A] pb-12" id="nexus-profile-view">
+    <div className="flex-1 overflow-y-auto custom-scrollbar h-full bg-canvas-parchment pb-12" id="nexus-profile-view">
       <AnimatePresence>
         {successMsg && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="fixed top-4 right-4 z-[100] bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-bold px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 backdrop-blur-xl">
+            className="fixed top-4 right-4 z-[100] bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-bold px-5 py-3 rounded-xs product-shadow flex items-center gap-2.5 backdrop-blur-xl">
             <CheckCircle className="w-4 h-4" /> {successMsg}
           </motion.div>
         )}
@@ -272,23 +272,23 @@ export default function ProfileView() {
       <div className="relative">
         <div className="h-56 md:h-72 w-full overflow-hidden relative group">
           <NexusImage src={coverPicPreview || profile.coverPic || ""} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-canvas-parchment via-canvas-parchment/80 to-transparent" />
         </div>
 
         <div className="max-w-[1300px] mx-auto px-6 md:px-12 -mt-16 md:-mt-24 relative z-10">
-          <div className="flex flex-col md:flex-row items-end gap-6 pb-6 border-b border-[#1E293B]">
+          <div className="flex flex-col md:flex-row items-end gap-6 pb-6 border-b border-hairline">
             {/* Avatar with glow ring */}
             <div className="relative shrink-0">
-              <div className="absolute inset-0 rounded-2xl bg-[#00E5FF] blur-xl opacity-30 animate-pulse" />
-              <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-2xl border-2 border-[#00E5FF]/40 bg-[#1E293B] overflow-hidden shadow-2xl shadow-[#00E5FF]/10">
+              <div className="absolute inset-0 rounded-sm bg-primary blur-xl opacity-30 animate-pulse" />
+               <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-sm border-2 border-primary/40 bg-canvas-parchment overflow-hidden product-shadow">
                 <NexusImage src={profilePicPreview || profile.avatar || ""} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
 
             <div className="flex-1 text-center md:text-left pb-1">
               <div className="flex items-center gap-2.5 justify-center md:justify-start flex-wrap">
-                <h1 className="text-xl md:text-3xl font-bold text-[#F8FAFC] tracking-tight leading-tight">{profile.name}</h1>
-                <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-lg border ${roleColor}`}>
+                <h1 className="text-xl md:text-3xl font-bold text-ink tracking-tight leading-tight">{profile.name}</h1>
+                <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-xs border ${roleColor}`}>
                   {profile.role.charAt(0).toUpperCase() + profile.role.slice(1)}
                 </span>
                 <span className={`flex items-center gap-1 text-[10px] font-bold ${statusColor}`}>
@@ -296,27 +296,27 @@ export default function ProfileView() {
                   {profile.status.charAt(0).toUpperCase() + profile.status.slice(1)}
                 </span>
               </div>
-              <p className="text-xs md:text-sm text-[#00E5FF] font-semibold mt-1 leading-normal">{profile.title}</p>
-              <div className="flex items-center justify-center md:justify-start gap-3 text-[#94A3B8] text-[11px] mt-1.5 font-medium flex-wrap">
-                <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-[#00E5FF] opacity-80" />{profile.location}</span>
-                <span className="flex items-center gap-1"><Briefcase className="w-3.5 h-3.5 text-[#00E5FF] opacity-80" />{profile.experienceLevel}</span>
+              <p className="text-xs md:text-sm text-primary font-semibold mt-1 leading-normal">{profile.title}</p>
+              <div className="flex items-center justify-center md:justify-start gap-3 text-ink-muted-48 text-[11px] mt-1.5 font-medium flex-wrap">
+                <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-primary opacity-80" />{profile.location}</span>
+                <span className="flex items-center gap-1"><Briefcase className="w-3.5 h-3.5 text-primary opacity-80" />{profile.experienceLevel}</span>
                 {profile.website && (
-                  <a href={profile.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#00E5FF] transition-colors">
-                    <Link className="w-3 h-3 text-[#00E5FF] opacity-80" />Portfolio <ArrowUpRight className="w-2.5 h-2.5" />
+                  <a href={profile.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary transition-colors">
+                    <Link className="w-3 h-3 text-primary opacity-80" />Portfolio <ArrowUpRight className="w-2.5 h-2.5" />
                   </a>
                 )}
               </div>
-              <p className="text-[11px] text-[#64748B] mt-2 max-w-2xl leading-relaxed">{profile.bio}</p>
+              <p className="text-[11px] text-ink-muted-48 mt-2 max-w-2xl leading-relaxed">{profile.bio}</p>
             </div>
 
             <div className="flex gap-2 shrink-0 pb-1">
               {isOwnProfile ? (
                 <button onClick={() => openEditor("basic")}
-                  className="bg-[#00E5FF] hover:bg-[#3B82F6] text-[#F8FAFC] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#00E5FF]/15 active:scale-95 transition-all cursor-pointer">
+                  className="bg-primary hover:bg-primary-focus text-white px-5 py-2.5 rounded-xs text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer">
                   <Edit3 className="w-3.5 h-3.5" /> Edit Profile
                 </button>
               ) : (
-                <button className="bg-[#1E293B] hover:bg-[#222] border border-[#1E293B] text-[#e0e0e0] px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer">
+                <button className="bg-canvas-parchment hover:bg-canvas border border-hairline text-ink-muted-48 px-4 py-2.5 rounded-xs text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer">
                   <Mail className="w-3.5 h-3.5" /> Message
                 </button>
               )}
@@ -332,32 +332,32 @@ export default function ProfileView() {
           {/* Network Statistics — Admin / Coordinator only */}
           {isAdvanced && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              className="bg-[#111827]/80 backdrop-blur-md rounded-2xl border border-[#1E293B] shadow-md overflow-hidden">
-              <div className="px-5 pt-5 pb-4 border-b border-[#1E293B] flex items-center justify-between">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" /> Network Stats</h3>
+              className="bg-canvas/80 backdrop-blur-md rounded-sm border border-hairline overflow-hidden">
+              <div className="px-5 pt-5 pb-4 border-b border-hairline flex items-center justify-between">
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" /> Network Stats</h3>
                 <CollaborationScore score={0} />
               </div>
               <div className="p-5 space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-[#1E293B] rounded-xl p-3.5 border border-[#1E293B]">
-                    <p className="text-xl font-bold text-[#F8FAFC] tracking-tight">{networkStats.connections}</p>
-                    <p className="text-[9px] text-[#94A3B8] uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><Users className="w-3 h-3" /> Connections</p>
+                  <div className="bg-canvas-parchment rounded-xs p-3.5 border border-hairline">
+                    <p className="text-xl font-bold text-ink tracking-tight">{networkStats.connections}</p>
+                    <p className="text-[9px] text-ink-muted-48 uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><Users className="w-3 h-3" /> Connections</p>
                   </div>
-                  <div className="bg-[#1E293B] rounded-xl p-3.5 border border-[#1E293B]">
-                    <p className="text-xl font-bold text-[#F8FAFC] tracking-tight">{networkStats.messagesSent.toLocaleString()}</p>
-                    <p className="text-[9px] text-[#94A3B8] uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><MessageSquare className="w-3 h-3" /> Messages</p>
+                  <div className="bg-canvas-parchment rounded-xs p-3.5 border border-hairline">
+                    <p className="text-xl font-bold text-ink tracking-tight">{networkStats.messagesSent.toLocaleString()}</p>
+                    <p className="text-[9px] text-ink-muted-48 uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><MessageSquare className="w-3 h-3" /> Messages</p>
                   </div>
-                  <div className="bg-[#1E293B] rounded-xl p-3.5 border border-[#1E293B]">
-                    <p className="text-xl font-bold text-[#F8FAFC] tracking-tight">{networkStats.activeConversations}</p>
-                    <p className="text-[9px] text-[#94A3B8] uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><Hash className="w-3 h-3" /> Active Chats</p>
+                  <div className="bg-canvas-parchment rounded-xs p-3.5 border border-hairline">
+                    <p className="text-xl font-bold text-ink tracking-tight">{networkStats.activeConversations}</p>
+                    <p className="text-[9px] text-ink-muted-48 uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><Hash className="w-3 h-3" /> Active Chats</p>
                   </div>
-                  <div className="bg-[#1E293B] rounded-xl p-3.5 border border-[#1E293B]">
-                    <p className={`text-xl font-bold tracking-tight ${networkStats.activityLevel === "High" ? "text-green-400" : networkStats.activityLevel === "Medium" ? "text-yellow-400" : "text-[#64748B]"}`}>{networkStats.activityLevel}</p>
-                    <p className="text-[9px] text-[#94A3B8] uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Activity</p>
+                  <div className="bg-canvas-parchment rounded-xs p-3.5 border border-hairline">
+                    <p className={`text-xl font-bold tracking-tight ${networkStats.activityLevel === "High" ? "text-green-400" : networkStats.activityLevel === "Medium" ? "text-yellow-400" : "text-ink-muted-48"}`}>{networkStats.activityLevel}</p>
+                    <p className="text-[9px] text-ink-muted-48 uppercase tracking-wider mt-0.5 font-bold flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Activity</p>
                   </div>
                 </div>
-                <div className="bg-[#0F172A] rounded-xl p-3 pt-5 border border-[#1E293B]">
-                  <p className="text-[9px] text-[#475569] uppercase tracking-wider font-bold mb-2">14-Day Activity</p>
+                <div className="bg-canvas-parchment rounded-xs p-3 pt-5 border border-hairline">
+                  <p className="text-[9px] text-ink-muted-48 uppercase tracking-wider font-bold mb-2">14-Day Activity</p>
                   <Sparkline data={[]} />
                 </div>
               </div>
@@ -366,20 +366,20 @@ export default function ProfileView() {
 
           {/* Skills & Expertise */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
+            className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> Skills & Expertise</h3>
-              {isOwnProfile && <button onClick={() => openEditor("professional")} className="text-[9px] text-[#00E5FF] font-bold uppercase tracking-wider hover:underline cursor-pointer">Manage</button>}
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> Skills & Expertise</h3>
+              {isOwnProfile && <button onClick={() => openEditor("professional")} className="text-[9px] text-primary font-bold uppercase tracking-wider hover:underline cursor-pointer">Manage</button>}
             </div>
             <div className="flex flex-wrap gap-2">
               {profile.skills.map((s, i) => (
                 <span key={s}
                   className={`px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wide transition-all ${
                     i === 0
-                      ? "bg-[#00E5FF]/15 text-[#00E5FF] border border-[#00E5FF]/30 shadow-[0_0_8px_rgba(0,229,255,0.08)]"
-                      : "bg-[#1E293B] text-[#94A3B8] border border-[#1E293B]"
+                      ? "bg-primary/15 text-primary border border-primary/30 shadow-[0_0_8px_rgba(0,102,204,0.08)]"
+                      : "bg-canvas-parchment text-ink-muted-48 border border-hairline"
                   }`}>
-                  {i === 0 && <Star className="w-2.5 h-2.5 fill-[#00E5FF]" />}
+                  {i === 0 && <Star className="w-2.5 h-2.5 fill-primary" />}
                   {s}
                 </span>
               ))}
@@ -388,42 +388,42 @@ export default function ProfileView() {
 
           {/* Availability & Collaboration */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-            className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-4 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Availability</h3>
+            className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Availability</h3>
             <div className="space-y-2">
-              <div className="flex items-center justify-between p-3 bg-[#1E293B] rounded-xl">
-                <span className="text-[11px] text-[#94A3B8]">Status</span>
+              <div className="flex items-center justify-between p-3 bg-canvas-parchment rounded-xs">
+                <span className="text-[11px] text-ink-muted-48">Status</span>
                 <span className={`flex items-center gap-1.5 text-[11px] font-bold ${statusColor}`}><StatusIcon className="w-3.5 h-3.5" /> {profile.status.charAt(0).toUpperCase() + profile.status.slice(1)}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-[#1E293B] rounded-xl">
-                <span className="text-[11px] text-[#94A3B8]">Available for collab</span>
-                <span className={`text-[11px] font-bold ${profile.availableForCollab ? "text-green-400" : "text-[#64748B]"}`}>{profile.availableForCollab ? "Yes" : "No"}</span>
+              <div className="flex items-center justify-between p-3 bg-canvas-parchment rounded-xs">
+                <span className="text-[11px] text-ink-muted-48">Available for collab</span>
+                <span className={`text-[11px] font-bold ${profile.availableForCollab ? "text-green-400" : "text-ink-muted-48"}`}>{profile.availableForCollab ? "Yes" : "No"}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-[#1E293B] rounded-xl">
-                <span className="text-[11px] text-[#94A3B8]">Email</span>
-                <span className="text-[11px] text-[#F8FAFC] flex items-center gap-1.5">{profile.email} {emailVerified && <CheckCircle className="w-3 h-3 text-green-400" />}</span>
+              <div className="flex items-center justify-between p-3 bg-canvas-parchment rounded-xs">
+                <span className="text-[11px] text-ink-muted-48">Email</span>
+                <span className="text-[11px] text-ink flex items-center gap-1.5">{profile.email} {emailVerified && <CheckCircle className="w-3 h-3 text-green-400" />}</span>
               </div>
             </div>
-            {isOwnProfile && <button onClick={() => openEditor("availability")} className="w-full mt-3 h-8 bg-[#0F172A] border border-[#1E293B] rounded-xl text-[10px] font-bold text-[#94A3B8] hover:text-[#F8FAFC] transition-all cursor-pointer">
+            {isOwnProfile && <button onClick={() => openEditor("availability")} className="w-full mt-3 h-8 bg-canvas-parchment border border-hairline rounded-xs text-[10px] font-bold text-ink-muted-48 hover:text-ink transition-all cursor-pointer">
               Update Availability
             </button>}
           </motion.div>
 
           {/* Security Quick Card */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-4 flex items-center gap-1.5"><Shield className="w-3.5 h-3.5" /> Security</h3>
+            className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-1.5"><Shield className="w-3.5 h-3.5" /> Security</h3>
             <div className="space-y-2">
-              <div className="flex items-center justify-between p-3 bg-[#1E293B] rounded-xl">
-                <span className="text-[11px] text-[#94A3B8]">Sessions</span>
-                <span className="text-[11px] text-[#F8FAFC]">{activeSessions} active</span>
+              <div className="flex items-center justify-between p-3 bg-canvas-parchment rounded-xs">
+                <span className="text-[11px] text-ink-muted-48">Sessions</span>
+                <span className="text-[11px] text-ink">{activeSessions} active</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-[#1E293B] rounded-xl">
-                <span className="text-[11px] text-[#94A3B8]">2FA</span>
-                <span className={`text-[11px] font-bold ${twoFactorEnabled ? "text-green-400" : "text-[#64748B]"}`}>{twoFactorEnabled ? "Enabled" : "Disabled"}</span>
+              <div className="flex items-center justify-between p-3 bg-canvas-parchment rounded-xs">
+                <span className="text-[11px] text-ink-muted-48">2FA</span>
+                <span className={`text-[11px] font-bold ${twoFactorEnabled ? "text-green-400" : "text-ink-muted-48"}`}>{twoFactorEnabled ? "Enabled" : "Disabled"}</span>
               </div>
             </div>
-            {isOwnProfile && <button onClick={() => openEditor("security")} className="w-full mt-3 h-8 bg-[#0F172A] border border-[#1E293B] rounded-xl text-[10px] font-bold text-[#94A3B8] hover:text-[#F8FAFC] transition-all cursor-pointer">
+            {isOwnProfile && <button onClick={() => openEditor("security")} className="w-full mt-3 h-8 bg-canvas-parchment border border-hairline rounded-xs text-[10px] font-bold text-ink-muted-48 hover:text-ink transition-all cursor-pointer">
               Manage Security
             </button>}
           </motion.div>
@@ -434,34 +434,34 @@ export default function ProfileView() {
           {/* Relationship Insights — Admin / Coordinator only */}
           {isAdvanced && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              className="bg-[#111827]/80 backdrop-blur-md rounded-2xl border border-[#1E293B] shadow-md">
-              <div className="px-5 py-4 border-b border-[#1E293B] flex items-center justify-between">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Relationship Insights</h3>
+              className="bg-canvas/80 backdrop-blur-md rounded-sm border border-hairline ">
+              <div className="px-5 py-4 border-b border-hairline flex items-center justify-between">
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Relationship Insights</h3>
               </div>
               <div className="p-5 space-y-5">
-                <p className="text-xs text-[#475569] text-center py-4">No relationship data yet. Start collaborating to build your network.</p>
+                <p className="text-xs text-ink-muted-48 text-center py-4">No relationship data yet. Start collaborating to build your network.</p>
               </div>
             </motion.div>
           )}
 
           {/* Portfolio */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
+            className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> Portfolio</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> Portfolio</h3>
             </div>
             {loadingProjects ? (
-              <p className="text-xs text-[#475569] text-center py-8">Loading projects...</p>
+              <p className="text-xs text-ink-muted-48 text-center py-8">Loading projects...</p>
             ) : projects.length === 0 ? (
-              <p className="text-xs text-[#475569] text-center py-8">{isOwnProfile ? "No projects yet" : "No published projects yet."}</p>
+              <p className="text-xs text-ink-muted-48 text-center py-8">{isOwnProfile ? "No projects yet" : "No published projects yet."}</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {projects.slice(0, 3).map((proj, i) => (
                   <div key={proj.id} onClick={() => router.push(`/dashboard/projects/${proj.id}`)}
-                    className="h-36 rounded-xl overflow-hidden group relative border border-[#1E293B] cursor-pointer hover:shadow-lg hover:shadow-[#00E5FF]/10 transition-all duration-300">
+                    className="h-36 rounded-xs overflow-hidden group relative border border-hairline cursor-pointer transition-all duration-300">
                     <NexusImage src={proj.image || ""} alt={proj.name} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
-                    <div className="absolute inset-0 bg-[#00E5FF]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Eye className="text-[#F8FAFC] w-5 h-5" />
+                    <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Eye className="text-white w-5 h-5" />
                     </div>
                   </div>
                 ))}
@@ -471,38 +471,38 @@ export default function ProfileView() {
 
           {/* Projects */}
           {loadingProjects ? (
-            <p className="text-xs text-[#475569] text-center py-8">Loading projects...</p>
+            <p className="text-xs text-ink-muted-48 text-center py-8">Loading projects...</p>
           ) : projects.length === 0 ? (
-            <p className="text-xs text-[#475569] text-center py-8">{isOwnProfile ? "No projects yet" : "No published projects yet."}</p>
+            <p className="text-xs text-ink-muted-48 text-center py-8">{isOwnProfile ? "No projects yet" : "No published projects yet."}</p>
           ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {projects.map(proj => (
               <motion.div key={proj.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
                 onClick={() => router.push(`/dashboard/projects/${proj.id}`)}
-                className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md relative overflow-hidden group hover:border-[#00E5FF]/40 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#00E5FF]/5 transition-all duration-300 cursor-pointer">
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity"><span className="text-[#00E5FF] text-6xl">&#9881;</span></div>
+                className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline relative overflow-hidden group hover:border-primary/40 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity"><span className="text-primary text-6xl">&#9881;</span></div>
                 {isOwnProfile && (
-                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-3 inline-block ${proj.status === "published" ? "bg-green-500/10 border border-green-500/20 text-green-400" : "bg-[#1E293B] border border-[#1E293B] text-[#94A3B8]"}`}>
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-3 inline-block ${proj.status === "published" ? "bg-green-500/10 border border-green-500/20 text-green-400" : "bg-canvas-parchment border border-hairline text-ink-muted-48"}`}>
                     {proj.status === "published" ? "Published" : "Draft"}
                   </span>
                 )}
-                <h4 className="text-sm font-bold text-[#F8FAFC] mb-1 leading-snug">{proj.name}</h4>
-                <p className="text-[#94A3B8] text-[11px] mb-4 leading-relaxed line-clamp-2">{proj.description}</p>
+                <h4 className="text-sm font-bold text-ink mb-1 leading-snug">{proj.name}</h4>
+                <p className="text-ink-muted-48 text-[11px] mb-4 leading-relaxed line-clamp-2">{proj.description}</p>
                 <div className="flex items-center gap-2">
                   {proj.link ? (
                     <a href={proj.link} target="_blank" rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
-                      className="bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20 px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-[#00E5FF]/20 transition-all">
+                      className="bg-primary/10 text-primary border border-primary/20 px-3 py-1.5 rounded-xs text-[10px] font-bold flex items-center gap-1 hover:bg-primary/20 transition-all">
                       <ExternalLink className="w-3 h-3" /> Visit Project
                     </a>
                   ) : (
                     <div className="flex -space-x-1.5">
-                      <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#1E293B]" />
-                      <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#1E293B]" />
-                      <div className="w-6 h-6 rounded-full border border-[#0f0f0f] bg-[#1E293B]" />
+                      <div className="w-6 h-6 rounded-full border border-hairline bg-canvas-parchment" />
+                      <div className="w-6 h-6 rounded-full border border-hairline bg-canvas-parchment" />
+                      <div className="w-6 h-6 rounded-full border border-hairline bg-canvas-parchment" />
                     </div>
                   )}
-                  {proj.performanceScore ? <span className="text-[10px] text-[#00E5FF] font-bold">{proj.performanceScore}</span> : proj.contributorsCount > 0 && <span className="text-[10px] text-[#94A3B8] font-medium">+{proj.contributorsCount} Contributors</span>}
+                  {proj.performanceScore ? <span className="text-[10px] text-primary font-bold">{proj.performanceScore}</span> : proj.contributorsCount > 0 && <span className="text-[10px] text-ink-muted-48 font-medium">+{proj.contributorsCount} Contributors</span>}
                 </div>
               </motion.div>
             ))}
@@ -512,21 +512,21 @@ export default function ProfileView() {
           {/* Notes & Activity */}
           <div className={`grid grid-cols-1 ${isAdvanced ? "md:grid-cols-2" : ""} gap-5`}>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
+              className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF]">Recent Notes</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary">Recent Notes</h3>
               </div>
               {loadingNotes ? (
-                <p className="text-xs text-[#475569] text-center py-6">Loading notes...</p>
+                <p className="text-xs text-ink-muted-48 text-center py-6">Loading notes...</p>
               ) : notes.length === 0 ? (
-                <p className="text-xs text-[#475569] text-center py-6">No notes yet.</p>
+                <p className="text-xs text-ink-muted-48 text-center py-6">No notes yet.</p>
               ) : (
               <ul className="space-y-2">
                 {notes.slice(0, 5).map(note => (
                   <li key={note.id} onClick={() => setViewNote(note)}
-                    className="p-3 bg-[#1E293B] rounded-xl border border-[#1E293B] hover:border-[#00E5FF]/30 hover:bg-[#1E293B]/80 transition-all cursor-pointer">
-                    <p className="text-xs font-bold text-[#F8FAFC] mb-0.5">{note.title}</p>
-                    <p className="text-[9px] text-[#94A3B8]">{new Date(note.updatedAt).toLocaleDateString()} &bull; {note.status}</p>
+                    className="p-3 bg-canvas-parchment rounded-xs border border-hairline hover:border-primary/30 hover:bg-canvas-parchment/80 transition-all cursor-pointer">
+                    <p className="text-xs font-bold text-ink mb-0.5">{note.title}</p>
+                    <p className="text-[9px] text-ink-muted-48">{new Date(note.updatedAt).toLocaleDateString()} &bull; {note.status}</p>
                   </li>
                 ))}
               </ul>
@@ -535,15 +535,15 @@ export default function ProfileView() {
 
             {isAdvanced ? (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF]">Recent Activity</h3>
-                <p className="text-xs text-[#475569] text-center py-8 mt-2">No recent activity.</p>
+                className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary">Recent Activity</h3>
+                <p className="text-xs text-ink-muted-48 text-center py-8 mt-2">No recent activity.</p>
               </motion.div>
             ) : (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="bg-[#111827]/80 backdrop-blur-md p-5 rounded-2xl border border-[#1E293B] shadow-md">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] flex items-center gap-1.5"><Bell className="w-3.5 h-3.5" /> Notifications</h3>
-                <p className="text-xs text-[#475569] text-center py-8 mt-2">No notifications yet.</p>
+                className="bg-canvas/80 backdrop-blur-md p-5 rounded-sm border border-hairline ">
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1.5"><Bell className="w-3.5 h-3.5" /> Notifications</h3>
+                <p className="text-xs text-ink-muted-48 text-center py-8 mt-2">No notifications yet.</p>
               </motion.div>
             )}
           </div>
@@ -555,21 +555,21 @@ export default function ProfileView() {
         {isEditing && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#111827] border border-[#1E293B] rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl relative">
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[#1E293B] shrink-0">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-[#00E5FF]">
+              className="bg-canvas border border-hairline rounded-sm max-w-2xl w-full max-h-[85vh] flex flex-col product-shadow relative">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-hairline shrink-0">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-primary">
                   {editSection === "basic" && "Basic Info"}
                   {editSection === "contact" && "Contact Info"}
                   {editSection === "professional" && "Professional Info"}
                   {editSection === "availability" && "Availability"}
                   {editSection === "security" && "Security"}
                 </h2>
-                <button onClick={closeEditor} className="w-7 h-7 flex items-center justify-center rounded-lg text-[#475569] hover:bg-[#1E293B] hover:text-[#F8FAFC] transition-all cursor-pointer"><X className="w-4 h-4" /></button>
+                <button onClick={closeEditor} className="w-7 h-7 flex items-center justify-center rounded-xs text-ink-muted-48 hover:bg-canvas-parchment hover:text-ink transition-all cursor-pointer"><X className="w-4 h-4" /></button>
               </div>
-              <div className="flex gap-1 px-6 pt-4 pb-2 border-b border-[#1E293B] shrink-0 overflow-x-auto">
+              <div className="flex gap-1 px-6 pt-4 pb-2 border-b border-hairline shrink-0 overflow-x-auto">
                 {(["basic", "contact", "professional", "availability", "security"] as const).map(s => (
                   <button key={s} onClick={() => { setEditSection(s); setErrors({}); }}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${editSection === s ? "bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20" : "text-[#64748B] hover:text-[#94A3B8]"}`}>
+                    className={`px-3 py-1.5 rounded-xs text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${editSection === s ? "bg-primary/10 text-primary border border-primary/20" : "text-ink-muted-48 hover:text-ink-muted-48"}`}>
                     {s === "basic" ? "Basic" : s === "contact" ? "Contact" : s === "professional" ? "Professional" : s === "availability" ? "Availability" : "Security"}
                   </button>
                 ))}
@@ -578,16 +578,16 @@ export default function ProfileView() {
                 {editSection === "basic" && (
                   <form onSubmit={handleSaveProfile} className="space-y-5">
                     <div>
-                      <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Profile Picture</label>
+                      <label className="block text-ink-muted-48 mb-2 font-bold uppercase tracking-wider text-[9px]">Profile Picture</label>
                       <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#1E293B] border border-[#1E293B] relative group">
+                        <div className="w-16 h-16 rounded-xs overflow-hidden bg-canvas-parchment border border-hairline relative group">
                           <NexusImage src={profilePicPreview || profile.avatar || ""} alt="" className="w-full h-full object-cover" />
                           <label className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                            <Camera className="w-5 h-5 text-[#F8FAFC]" />
+                            <Camera className="w-5 h-5 text-ink" />
                             <input type="file" accept="image/*" onChange={handlePicUpload("profile")} className="hidden" />
                           </label>
                         </div>
-                        <label className="px-4 h-9 bg-[#1E293B] border border-[#1E293B] rounded-xl text-[10px] font-bold text-[#94A3B8] hover:text-[#F8FAFC] flex items-center gap-2 cursor-pointer transition-all">
+                        <label className="px-4 h-9 bg-canvas-parchment border border-hairline rounded-xs text-[10px] font-bold text-ink-muted-48 hover:text-ink flex items-center gap-2 cursor-pointer transition-all">
                           <Camera className="w-3.5 h-3.5" /> Upload Photo
                           <input type="file" accept="image/*" onChange={handlePicUpload("profile")} className="hidden" />
                         </label>
@@ -595,12 +595,12 @@ export default function ProfileView() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Cover Image (optional)</label>
+                      <label className="block text-ink-muted-48 mb-2 font-bold uppercase tracking-wider text-[9px]">Cover Image (optional)</label>
                       <div className="flex items-center gap-4">
-                        <div className="w-32 h-16 rounded-xl overflow-hidden bg-[#1E293B] border border-[#1E293B]">
+                        <div className="w-32 h-16 rounded-xs overflow-hidden bg-canvas-parchment border border-hairline">
                           <NexusImage src={coverPicPreview || profile.coverPic || ""} alt="" className="w-full h-full object-cover" />
                         </div>
-                        <label className="px-4 h-9 bg-[#1E293B] border border-[#1E293B] rounded-xl text-[10px] font-bold text-[#94A3B8] hover:text-[#F8FAFC] flex items-center gap-2 cursor-pointer transition-all">
+                        <label className="px-4 h-9 bg-canvas-parchment border border-hairline rounded-xs text-[10px] font-bold text-ink-muted-48 hover:text-ink flex items-center gap-2 cursor-pointer transition-all">
                           <Camera className="w-3.5 h-3.5" /> Upload Cover
                           <input type="file" accept="image/*" onChange={handlePicUpload("cover")} className="hidden" />
                         </label>
@@ -608,25 +608,25 @@ export default function ProfileView() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Full Name *</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Full Name *</label>
                       <input type="text" value={editForm.name} onChange={e => setEditForm(p => ({ ...p, name: e.target.value }))}
-                        className={`w-full bg-[#0F172A] border ${errors.name ? "border-red-500/50" : "border-[#1E293B]"} p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all`} />
+                        className={`w-full bg-canvas-parchment border ${errors.name ? "border-red-500/50" : "border-hairline"} p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all`} />
                       {errors.name && <p className="text-[9px] text-red-400 mt-1">{errors.name}</p>}
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Professional Title *</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Professional Title *</label>
                       <input type="text" value={editForm.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))}
-                        className={`w-full bg-[#0F172A] border ${errors.title ? "border-red-500/50" : "border-[#1E293B]"} p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all`} />
+                        className={`w-full bg-canvas-parchment border ${errors.title ? "border-red-500/50" : "border-hairline"} p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all`} />
                       {errors.title && <p className="text-[9px] text-red-400 mt-1">{errors.title}</p>}
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Biography</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Biography</label>
                       <textarea value={editForm.bio} rows={4} onChange={e => setEditForm(p => ({ ...p, bio: e.target.value }))}
-                        className="w-full bg-[#0F172A] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all leading-relaxed resize-none" />
+                        className="w-full bg-canvas-parchment border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all leading-relaxed resize-none" />
                     </div>
                     <div className="flex gap-3 justify-end pt-2">
-                      <button type="button" onClick={closeEditor} className="bg-[#1E293B] hover:bg-[#222] border border-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC] px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer">Cancel</button>
-                      <button type="submit" className="bg-[#00E5FF] hover:bg-[#3B82F6] text-[#F8FAFC] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#00E5FF]/15 active:scale-95 transition-all cursor-pointer">
+                      <button type="button" onClick={closeEditor} className="bg-canvas-parchment hover:bg-canvas border border-hairline text-ink-muted-48 hover:text-ink px-4 py-2.5 rounded-xs text-xs font-bold transition-all cursor-pointer">Cancel</button>
+                      <button type="submit" className="bg-primary hover:bg-primary-focus text-white px-5 py-2.5 rounded-xs text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer">
                         <Save className="w-4 h-4" /> Save Changes
                       </button>
                     </div>
@@ -635,10 +635,10 @@ export default function ProfileView() {
                 {editSection === "contact" && (
                   <form onSubmit={handleSaveProfile} className="space-y-5">
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Email</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Email</label>
                       <div className="flex items-center gap-2">
                         <input type="email" value={editForm.email} onChange={e => setEditForm(p => ({ ...p, email: e.target.value }))}
-                          className={`flex-1 bg-[#0F172A] border ${errors.email ? "border-red-500/50" : "border-[#1E293B]"} p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all`} />
+                          className={`flex-1 bg-canvas-parchment border ${errors.email ? "border-red-500/50" : "border-hairline"} p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all`} />
                         <span className={`text-[9px] font-bold flex items-center gap-1 ${emailVerified ? "text-green-400" : "text-yellow-400"}`}>
                           {emailVerified ? <><CheckCircle className="w-3 h-3" /> Verified</> : <><AlertCircle className="w-3 h-3" /> Unverified</>}
                         </span>
@@ -646,18 +646,18 @@ export default function ProfileView() {
                       {errors.email && <p className="text-[9px] text-red-400 mt-1">{errors.email}</p>}
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Location</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Location</label>
                       <input type="text" value={editForm.location} onChange={e => setEditForm(p => ({ ...p, location: e.target.value }))}
-                        className="w-full bg-[#0F172A] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all" />
+                        className="w-full bg-canvas-parchment border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all" />
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Website / Portfolio</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Website / Portfolio</label>
                       <input type="url" value={editForm.website} onChange={e => setEditForm(p => ({ ...p, website: e.target.value }))} placeholder="https://"
-                        className="w-full bg-[#0F172A] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all" />
+                        className="w-full bg-canvas-parchment border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all" />
                     </div>
                     <div className="flex gap-3 justify-end pt-2">
-                      <button type="button" onClick={closeEditor} className="bg-[#1E293B] hover:bg-[#222] border border-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC] px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer">Cancel</button>
-                      <button type="submit" className="bg-[#00E5FF] hover:bg-[#3B82F6] text-[#F8FAFC] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#00E5FF]/15 active:scale-95 transition-all cursor-pointer">
+                      <button type="button" onClick={closeEditor} className="bg-canvas-parchment hover:bg-canvas border border-hairline text-ink-muted-48 hover:text-ink px-4 py-2.5 rounded-xs text-xs font-bold transition-all cursor-pointer">Cancel</button>
+                      <button type="submit" className="bg-primary hover:bg-primary-focus text-white px-5 py-2.5 rounded-xs text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer">
                         <Save className="w-4 h-4" /> Save Changes
                       </button>
                     </div>
@@ -666,49 +666,49 @@ export default function ProfileView() {
                 {editSection === "professional" && (
                   <form onSubmit={handleSaveProfile} className="space-y-5">
                     <div>
-                      <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Skills</label>
+                      <label className="block text-ink-muted-48 mb-2 font-bold uppercase tracking-wider text-[9px]">Skills</label>
                       <div className="flex flex-wrap gap-2 mb-3 min-h-[32px]">
                         {editForm.skills.map(s => (
-                          <span key={s} className="bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20 px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5">
+                          <span key={s} className="bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5">
                             {s} <button type="button" onClick={() => removeSkill(s)} className="hover:text-red-400 transition-colors cursor-pointer"><X className="w-3 h-3" /></button>
                           </span>
                         ))}
-                        {editForm.skills.length === 0 && <span className="text-[10px] text-[#475569]">No skills added yet</span>}
+                        {editForm.skills.length === 0 && <span className="text-[10px] text-ink-muted-48">No skills added yet</span>}
                       </div>
                       <div className="relative">
                         <input type="text" value={skillInput} onChange={e => { setSkillInput(e.target.value); setShowSkillSuggestions(true); }}
                           onFocus={() => setShowSkillSuggestions(true)} onBlur={() => setTimeout(() => setShowSkillSuggestions(false), 200)}
                           placeholder="Type to add a skill..."
-                          className="w-full bg-[#0F172A] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] placeholder:text-[#475569] focus:outline-none focus:border-[#00E5FF] transition-all" />
+                          className="w-full bg-canvas-parchment border border-hairline p-3 rounded-xs text-xs text-ink placeholder:text-ink-muted-48 focus:outline-none focus:border-primary transition-all" />
                         {showSkillSuggestions && filteredSkillSuggestions.length > 0 && (
-                          <div className="absolute top-full left-0 right-0 mt-1 bg-[#111827] border border-[#1E293B] rounded-xl shadow-2xl z-10 max-h-40 overflow-y-auto custom-scrollbar">
+                          <div className="absolute top-full left-0 right-0 mt-1 bg-canvas border border-hairline rounded-xs product-shadow z-10 max-h-40 overflow-y-auto custom-scrollbar">
                             {filteredSkillSuggestions.slice(0, 8).map(s => (
                               <button type="button" key={s} onClick={() => addSkill(s)}
-                                className="w-full text-left px-3 py-2 text-xs text-[#94A3B8] hover:bg-[#1E293B] hover:text-[#F8FAFC] transition-all cursor-pointer">{s}</button>
+                                className="w-full text-left px-3 py-2 text-xs text-ink-muted-48 hover:bg-canvas-parchment hover:text-ink transition-all cursor-pointer">{s}</button>
                             ))}
                           </div>
                         )}
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Experience Level</label>
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Experience Level</label>
                       <select value={editForm.experienceLevel} onChange={e => setEditForm(p => ({ ...p, experienceLevel: e.target.value }))}
-                        className="appearance-none w-full bg-[#0F172A] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all cursor-pointer"
+                        className="appearance-none w-full bg-canvas-parchment border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all cursor-pointer"
                         style={{ WebkitAppearance: "none", MozAppearance: "none" }}>
                         {["Junior", "Mid-Level", "Senior", "Lead", "Principal"].map(level => (
-                          <option key={level} value={level} className="bg-[#0F172A] text-[#F8FAFC]">{level}</option>
+                          <option key={level} value={level} className="bg-canvas-parchment text-ink">{level}</option>
                         ))}
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Role</label>
-                      <div className="w-full bg-[#0F172A] border border-[#1E293B] p-3 rounded-xl text-xs text-[#64748B] flex items-center gap-2">
-                        <Shield className="w-3.5 h-3.5 text-[#00E5FF]" /> {profile.role.charAt(0).toUpperCase() + profile.role.slice(1)} (read-only)
+                      <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Role</label>
+                      <div className="w-full bg-canvas-parchment border border-hairline p-3 rounded-xs text-xs text-ink-muted-48 flex items-center gap-2">
+                        <Shield className="w-3.5 h-3.5 text-primary" /> {profile.role.charAt(0).toUpperCase() + profile.role.slice(1)} (read-only)
                       </div>
                     </div>
                     <div className="flex gap-3 justify-end pt-2">
-                      <button type="button" onClick={closeEditor} className="bg-[#1E293B] hover:bg-[#222] border border-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC] px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer">Cancel</button>
-                      <button type="submit" className="bg-[#00E5FF] hover:bg-[#3B82F6] text-[#F8FAFC] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#00E5FF]/15 active:scale-95 transition-all cursor-pointer">
+                      <button type="button" onClick={closeEditor} className="bg-canvas-parchment hover:bg-canvas border border-hairline text-ink-muted-48 hover:text-ink px-4 py-2.5 rounded-xs text-xs font-bold transition-all cursor-pointer">Cancel</button>
+                      <button type="submit" className="bg-primary hover:bg-primary-focus text-white px-5 py-2.5 rounded-xs text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer">
                         <Save className="w-4 h-4" /> Save Changes
                       </button>
                     </div>
@@ -717,14 +717,14 @@ export default function ProfileView() {
                 {editSection === "availability" && (
                   <form onSubmit={handleSaveProfile} className="space-y-5">
                     <div>
-                      <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Status</label>
+                      <label className="block text-ink-muted-48 mb-2 font-bold uppercase tracking-wider text-[9px]">Status</label>
                       <div className="grid grid-cols-3 gap-3">
                         {(["online", "busy", "offline"] as const).map(s => {
                           const Icon = s === "online" ? Wifi : s === "busy" ? MinusCircle : Moon;
-                          const color = s === "online" ? "text-green-400 border-green-500/20 bg-green-500/10" : s === "busy" ? "text-yellow-400 border-yellow-500/20 bg-yellow-500/10" : "text-[#64748B] border-[#1E293B] bg-[#1E293B]";
+                          const color = s === "online" ? "text-green-400 border-green-500/20 bg-green-500/10" : s === "busy" ? "text-yellow-400 border-yellow-500/20 bg-yellow-500/10" : "text-ink-muted-48 border-hairline bg-canvas-parchment";
                           return (
                             <button type="button" key={s} onClick={() => setEditForm(p => ({ ...p, status: s }))}
-                              className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${editForm.status === s ? `${color} ring-1 ring-inset` : "text-[#475569] border-[#1E293B] hover:bg-[#1E293B]"}`}>
+                              className={`flex items-center justify-center gap-2 p-3 rounded-xs border text-xs font-bold transition-all cursor-pointer ${editForm.status === s ? `${color} ring-1 ring-inset` : "text-ink-muted-48 border-hairline hover:bg-canvas-parchment"}`}>
                               <Icon className="w-4 h-4" /> {s.charAt(0).toUpperCase() + s.slice(1)}
                             </button>
                           );
@@ -732,16 +732,16 @@ export default function ProfileView() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[#94A3B8] mb-2 font-bold uppercase tracking-wider text-[9px]">Available for collaboration</label>
+                      <label className="block text-ink-muted-48 mb-2 font-bold uppercase tracking-wider text-[9px]">Available for collaboration</label>
                       <button type="button" onClick={() => setEditForm(p => ({ ...p, availableForCollab: !p.availableForCollab }))}
-                        className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer w-fit ${editForm.availableForCollab ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-[#1E293B] border-[#1E293B] text-[#64748B]"}`}>
+                        className={`flex items-center gap-3 p-3 rounded-xs border transition-all cursor-pointer w-fit ${editForm.availableForCollab ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-canvas-parchment border-hairline text-ink-muted-48"}`}>
                         {editForm.availableForCollab ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
                         <span className="text-xs font-bold">{editForm.availableForCollab ? "Yes, open to collaboration" : "Not available"}</span>
                       </button>
                     </div>
                     <div className="flex gap-3 justify-end pt-2">
-                      <button type="button" onClick={closeEditor} className="bg-[#1E293B] hover:bg-[#222] border border-[#1E293B] text-[#94A3B8] hover:text-[#F8FAFC] px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer">Cancel</button>
-                      <button type="submit" className="bg-[#00E5FF] hover:bg-[#3B82F6] text-[#F8FAFC] px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-[#00E5FF]/15 active:scale-95 transition-all cursor-pointer">
+                      <button type="button" onClick={closeEditor} className="bg-canvas-parchment hover:bg-canvas border border-hairline text-ink-muted-48 hover:text-ink px-4 py-2.5 rounded-xs text-xs font-bold transition-all cursor-pointer">Cancel</button>
+                      <button type="submit" className="bg-primary hover:bg-primary-focus text-white px-5 py-2.5 rounded-xs text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer">
                         <Save className="w-4 h-4" /> Save Changes
                       </button>
                     </div>
@@ -749,50 +749,50 @@ export default function ProfileView() {
                 )}
                 {editSection === "security" && (
                   <div className="space-y-6">
-                    <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-5">
-                      <h4 className="text-xs font-bold text-[#F8FAFC] mb-4 flex items-center gap-2"><Key className="w-4 h-4 text-[#00E5FF]" /> Change Password</h4>
+                    <div className="bg-canvas-parchment border border-hairline rounded-xs p-5">
+                      <h4 className="text-xs font-bold text-ink mb-4 flex items-center gap-2"><Key className="w-4 h-4 text-primary" /> Change Password</h4>
                       <form onSubmit={handleChangePassword} className="space-y-4">
                         <div>
-                          <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Current Password</label>
+                          <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Current Password</label>
                           <input type="password" value={passwordForm.current} onChange={e => setPasswordForm(p => ({ ...p, current: e.target.value }))}
-                            className="w-full bg-[#111827] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all" />
+                            className="w-full bg-canvas border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all" />
                         </div>
                         <div>
-                          <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">New Password</label>
+                          <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">New Password</label>
                           <input type="password" value={passwordForm.newPass} onChange={e => setPasswordForm(p => ({ ...p, newPass: e.target.value }))}
-                            className="w-full bg-[#111827] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all" />
+                            className="w-full bg-canvas border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all" />
                         </div>
                         <div>
-                          <label className="block text-[#94A3B8] mb-1.5 font-bold uppercase tracking-wider text-[9px]">Confirm New Password</label>
+                          <label className="block text-ink-muted-48 mb-1.5 font-bold uppercase tracking-wider text-[9px]">Confirm New Password</label>
                           <input type="password" value={passwordForm.confirm} onChange={e => setPasswordForm(p => ({ ...p, confirm: e.target.value }))}
-                            className="w-full bg-[#111827] border border-[#1E293B] p-3 rounded-xl text-xs text-[#F8FAFC] focus:outline-none focus:border-[#00E5FF] transition-all" />
+                            className="w-full bg-canvas border border-hairline p-3 rounded-xs text-xs text-ink focus:outline-none focus:border-primary transition-all" />
                         </div>
                         {passwordError && <p className="text-[10px] text-red-400 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {passwordError}</p>}
-                        <button type="submit" className="bg-[#1E293B] hover:bg-[#222] border border-[#1E293B] text-[#F8FAFC] px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer">
+                        <button type="submit" className="bg-canvas-parchment hover:bg-canvas border border-hairline text-ink px-4 py-2.5 rounded-xs text-xs font-bold transition-all cursor-pointer">
                           <Key className="w-3.5 h-3.5 inline mr-1.5" /> Update Password
                         </button>
                       </form>
                     </div>
-                    <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-5">
+                    <div className="bg-canvas-parchment border border-hairline rounded-xs p-5">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-xs font-bold text-[#F8FAFC] flex items-center gap-2"><Shield className="w-4 h-4 text-[#00E5FF]" /> Two-Factor Authentication</h4>
-                          <p className="text-[10px] text-[#64748B] mt-1">Add an extra layer of security to your account</p>
+                          <h4 className="text-xs font-bold text-ink flex items-center gap-2"><Shield className="w-4 h-4 text-primary" /> Two-Factor Authentication</h4>
+                          <p className="text-[10px] text-ink-muted-48 mt-1">Add an extra layer of security to your account</p>
                         </div>
                         <button type="button" onClick={() => setTwoFactorEnabled(p => !p)}
-                          className={`relative w-11 h-6 rounded-full transition-all duration-300 cursor-pointer ${twoFactorEnabled ? "bg-[#00E5FF] shadow-[0_0_8px_rgba(0,229,255,0.4)]" : "bg-[#1E293B]"}`}>
-                          <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${twoFactorEnabled ? "left-[22px]" : "left-0.5"}`} />
+                          className={`relative w-11 h-6 rounded-full transition-all duration-300 cursor-pointer ${twoFactorEnabled ? "bg-primary shadow-[0_0_8px_rgba(0,102,204,0.4)]" : "bg-canvas-parchment"}`}>
+                          <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all duration-300 ${twoFactorEnabled ? "left-[22px]" : "left-0.5"}`} />
                         </button>
                       </div>
                     </div>
-                    <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-5">
+                    <div className="bg-canvas-parchment border border-hairline rounded-xs p-5">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-xs font-bold text-[#F8FAFC] flex items-center gap-2"><LogOut className="w-4 h-4 text-red-400" /> Active Sessions</h4>
-                          <p className="text-[10px] text-[#64748B] mt-1">Sign out from all devices and browsers</p>
+                          <h4 className="text-xs font-bold text-ink flex items-center gap-2"><LogOut className="w-4 h-4 text-red-400" /> Active Sessions</h4>
+                          <p className="text-[10px] text-ink-muted-48 mt-1">Sign out from all devices and browsers</p>
                         </div>
                         <button type="button" onClick={handleLogoutAll}
-                          className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2 rounded-xl text-[10px] font-bold hover:bg-red-500/20 transition-all cursor-pointer">Logout All</button>
+                          className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2 rounded-xs text-[10px] font-bold hover:bg-red-500/20 transition-all cursor-pointer">Logout All</button>
                       </div>
                     </div>
                   </div>
@@ -808,27 +808,27 @@ export default function ProfileView() {
         {viewNote && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#111827] border border-[#1E293B] rounded-2xl max-w-xl w-full max-h-[75vh] flex flex-col shadow-2xl">
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[#1E293B] shrink-0">
+              className="bg-canvas border border-hairline rounded-sm max-w-xl w-full max-h-[75vh] flex flex-col product-shadow">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-hairline shrink-0">
                 <div className="flex items-center gap-3 min-w-0">
-                  <h2 className="text-sm font-bold text-[#F8FAFC] truncate">{viewNote.title}</h2>
-                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-lg border shrink-0 ${
+                  <h2 className="text-sm font-bold text-ink truncate">{viewNote.title}</h2>
+                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-xs border shrink-0 ${
                     viewNote.status === "Published" ? "bg-green-500/10 text-green-400 border-green-500/20"
                     : viewNote.status === "Shared" ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
                     : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
                   }`}>{viewNote.status}</span>
                 </div>
-                <button onClick={() => setViewNote(null)} className="w-7 h-7 flex items-center justify-center rounded-lg text-[#475569] hover:bg-[#1E293B] hover:text-[#F8FAFC] transition-all cursor-pointer shrink-0">
+                <button onClick={() => setViewNote(null)} className="w-7 h-7 flex items-center justify-center rounded-xs text-ink-muted-48 hover:bg-canvas-parchment hover:text-ink transition-all cursor-pointer shrink-0">
                   <X className="w-4 h-4" />
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                 {viewNote.content ? (
-                  <div className="text-xs text-[#cbd5e1] leading-relaxed whitespace-pre-wrap">{viewNote.content}</div>
+                  <div className="text-xs text-ink-muted-80 leading-relaxed whitespace-pre-wrap">{viewNote.content}</div>
                 ) : (
-                  <p className="text-xs text-[#475569] text-center py-8">No content</p>
+                  <p className="text-xs text-ink-muted-48 text-center py-8">No content</p>
                 )}
-                <div className="mt-6 pt-4 border-t border-[#1E293B] flex items-center gap-2 text-[10px] text-[#475569]">
+                <div className="mt-6 pt-4 border-t border-hairline flex items-center gap-2 text-[10px] text-ink-muted-48">
                   <Clock className="w-3 h-3" /> Updated {new Date(viewNote.updatedAt).toLocaleString()}
                 </div>
               </div>
