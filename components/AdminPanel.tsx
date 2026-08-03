@@ -652,16 +652,8 @@ function SettingsTab() {
           </div>
           <div className="p-5 space-y-3">
             <div className="flex items-center justify-between caption">
-              <span className="text-ink-muted-48">Node Version</span>
-              <span className="text-ink font-mono">{navigator.userAgent.includes("Node") ? "Server" : "Client"}</span>
-            </div>
-            <div className="flex items-center justify-between caption">
-              <span className="text-ink-muted-48">API Status</span>
-              <span className="text-green-600 flex items-center gap-1.5"><Circle className="w-2 h-2 fill-green-600" /> Connected</span>
-            </div>
-            <div className="flex items-center justify-between caption">
               <span className="text-ink-muted-48">Environment</span>
-              <span className="text-ink font-mono">Development</span>
+              <span className="text-ink font-mono capitalize">{typeof process !== "undefined" && process.env.NODE_ENV === "production" ? "Production" : "Development"}</span>
             </div>
           </div>
         </div>
