@@ -28,7 +28,7 @@ if (fs.existsSync(envPath)) {
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/nexus";
 const JWT_SECRET = process.env.JWT_SECRET || "nexus-local-dev-secret-key-change-in-production";
-const PORT = process.env.SOCKET_PORT || 3000;
+const PORT = process.env.SOCKET_PORT || 3001;
 
 const server = http.createServer();
 const io = new Server(server, { cors: { origin: "*" } });
